@@ -1,0 +1,1408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://serviceinterface_v1.b2b.audatex.com" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+ <types>
+
+  <schema elementFormDefault="qualified" targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://www.w3.org/2001/XMLSchema">
+
+   <complexType name="B2BRequest">
+
+    <annotation>
+
+     <documentation>
+The generic request of an AudaNet B2B web service.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element maxOccurs="unbounded" minOccurs="0" name="parameter" type="tns:B2BParameter">
+
+      <annotation>
+
+       <documentation>
+The parameters for the invocation. This includes the callers credentials (loginId,
+                    password), optionally the xslt stylesheet name (if the payload needs to be transformed to SAXIF) and
+                    additional parameters specific to the operation.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="payload" type="anyType">
+
+      <annotation>
+
+       <documentation>
+The data input for the operation to invoke, if required by the operation. The payload
+                    is typically an XML fragment or a string containing XML.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <complexType name="B2BParameter">
+
+    <annotation>
+
+     <documentation>
+A parameter item to pass to an AudaNet B2B web service. Each parameter consists of a name
+                and a value. The name is case sensitive.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="name" type="string">
+
+      <annotation>
+
+       <documentation>
+The name of the parameter. Must be unique in the parameter list.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="value" type="string">
+
+      <annotation>
+
+       <documentation>
+The value of the parameter.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+    <attribute name="xsltParameter" type="boolean" use="optional">
+
+     <annotation>
+
+      <documentation>
+NB! This attribute is deprecated. Please use the context attribute instead.
+                The parameters having this attribute set to &quot;true&quot; will be passed to the XSLT
+                  transformation instead of to the service operation.      </documentation>
+
+     </annotation>
+
+    </attribute>
+
+    <attribute name="context" type="string" use="optional">
+
+     <annotation>
+
+      <documentation>
+The parameters with the context attribute set to a valid context will
+                not be passed to the service operation but to one of the contexts. Currently 
+                supported values:
+                1. 'XSLT' - same as the old xsltParameter=true attribute, parameters marked with the
+                XSLT context will be passed to the XSL transformation engine.
+                2. 'BRE' - parameters with the BRE context will be passed to the BRE rule engine as 
+                variables.      </documentation>
+
+     </annotation>
+
+    </attribute>
+
+   </complexType>
+
+   <complexType name="B2BResponse">
+
+    <annotation>
+
+     <documentation>
+The generic response of an AudaNet B2B web service.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="returnCode" type="int">
+
+      <annotation>
+
+       <documentation>
+Indicates if the invocation was successful or not. Can have the following values:
+                    0: Success. The operation completed successfully.
+                    1: Warning. The operation completed, but some sub-tasks had a problem. The messages contain the
+                    warning information.
+                    2: Error. The operation failed. The messages contain the error information.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="loginId" type="string">
+
+      <annotation>
+
+       <documentation>
+The loginId of the user invoking the service.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="hostName" type="string">
+
+      <annotation>
+
+       <documentation>
+The host which processed the request.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="timestamp" type="dateTime">
+
+      <annotation>
+
+       <documentation>
+The timestamp when the response was generated.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element maxOccurs="unbounded" minOccurs="1" name="message" type="tns:B2BMessage">
+
+      <annotation>
+
+       <documentation>
+Contains information, warning or error messages. The service
+                    always returns at least one
+                    message, but there can be more (e.g. multiple warnings).       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="payload" type="anyType">
+
+      <annotation>
+
+       <documentation>
+The payload, if the invoked operation returns a payload to the client. The payload is
+                    typically an XML fragment or a string containing XML.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <complexType name="B2BMessage">
+
+    <annotation>
+
+     <documentation>
+Contains an information, warning or error message. A message consists of a unique code and
+                a text. A translated text to the users locale may be available as well.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="messageCode" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains the code for the message. This code is a unique alphanumeric
+                    identifier.
+                         </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="severity" type="int">
+
+      <annotation>
+
+       <documentation>
+Indicates the kind of message:
+                    0: information message
+                    1: warning
+                    2: error       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="text" type="string">
+
+      <annotation>
+
+       <documentation>
+A textual description in English of what happened.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="localizedText" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains the translated message text, if available, in the users locale.
+                         </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element maxOccurs="unbounded" minOccurs="0" name="additionalInfo" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains formalized additional information, if available. For example, this can be
+                    numeric arguments to an error message. Each specific message code defines if it is provides
+                    additional information and of what type that is.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="caseId" type="string">
+
+      <annotation>
+
+       <documentation>
+The Id of the case that the service operated on. If a new case has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created case.
+                    The client may need this Id to reference this case in subsequent operations.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="taskId" type="string">
+
+      <annotation>
+
+       <documentation>
+The Id of the task that the service operated on. If a new task has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created task.
+                    The client may need this Id to reference this task in subsequent operations.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <element name="pingRequest" type="tns:B2BRequest"/>
+
+   <element name="pingResponse" type="tns:B2BResponse"/>
+
+   <element name="executeActionRequest" type="tns:B2BRequest"/>
+
+   <element name="executeActionResponse" type="tns:B2BResponse"/>
+
+   <element name="createTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="createTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="updateTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="updateTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="getTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="getTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="getTaskListRequest" type="tns:B2BRequest"/>
+
+   <element name="getTaskListResponse" type="tns:B2BResponse"/>
+
+   <element name="findTasksRequest" type="tns:B2BRequest"/>
+
+   <element name="findTasksResponse" type="tns:B2BResponse"/>
+
+   <element name="reassignTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="reassignTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="reopenTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="reopenTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="reopenCaseRequest" type="tns:B2BRequest"/>
+
+   <element name="reopenCaseResponse" type="tns:B2BResponse"/>
+
+   <element name="closeTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="closeTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="closeCaseRequest" type="tns:B2BRequest"/>
+
+   <element name="closeCaseResponse" type="tns:B2BResponse"/>
+
+   <element name="transferTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="transferTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="mergeTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="mergeTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="sendTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="sendTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="deleteTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="deleteTaskResponse" type="tns:B2BResponse"/>
+
+  </schema>
+
+ </types>
+
+ <message name="pingRequest">
+
+  <part element="tns:pingRequest" name="pingRequest"/>
+
+ </message>
+
+ <message name="pingResponse">
+
+  <part element="tns:pingResponse" name="pingResponse"/>
+
+ </message>
+
+ <message name="executeActionRequest">
+
+  <part element="tns:executeActionRequest" name="executeActionRequest"/>
+
+ </message>
+
+ <message name="executeActionResponse">
+
+  <part element="tns:executeActionResponse" name="executeActionResponse"/>
+
+ </message>
+
+ <message name="createTaskRequest">
+
+  <part element="tns:createTaskRequest" name="createTaskRequest"/>
+
+ </message>
+
+ <message name="createTaskResponse">
+
+  <part element="tns:createTaskResponse" name="createTaskResponse"/>
+
+ </message>
+
+ <message name="updateTaskRequest">
+
+  <part element="tns:updateTaskRequest" name="updateTaskRequest"/>
+
+ </message>
+
+ <message name="updateTaskResponse">
+
+  <part element="tns:updateTaskResponse" name="updateTaskResponse"/>
+
+ </message>
+
+ <message name="getTaskRequest">
+
+  <part element="tns:getTaskRequest" name="getTaskRequest"/>
+
+ </message>
+
+ <message name="getTaskResponse">
+
+  <part element="tns:getTaskResponse" name="getTaskResponse"/>
+
+ </message>
+
+ <message name="getTaskListRequest">
+
+  <part element="tns:getTaskListRequest" name="getTaskListRequest"/>
+
+ </message>
+
+ <message name="getTaskListResponse">
+
+  <part element="tns:getTaskListResponse" name="getTaskListResponse"/>
+
+ </message>
+
+ <message name="findTasksRequest">
+
+  <part element="tns:findTasksRequest" name="findTasksRequest"/>
+
+ </message>
+
+ <message name="findTasksResponse">
+
+  <part element="tns:findTasksResponse" name="findTasksResponse"/>
+
+ </message>
+
+ <message name="reassignTaskRequest">
+
+  <part element="tns:reassignTaskRequest" name="reassignTaskRequest"/>
+
+ </message>
+
+ <message name="reassignTaskResponse">
+
+  <part element="tns:reassignTaskResponse" name="reassignTaskResponse"/>
+
+ </message>
+
+ <message name="reopenTaskRequest">
+
+  <part element="tns:reopenTaskRequest" name="reopenTaskRequest"/>
+
+ </message>
+
+ <message name="reopenTaskResponse">
+
+  <part element="tns:reopenTaskResponse" name="reopenTaskResponse"/>
+
+ </message>
+
+ <message name="reopenCaseRequest">
+
+  <part element="tns:reopenCaseRequest" name="reopenCaseRequest"/>
+
+ </message>
+
+ <message name="reopenCaseResponse">
+
+  <part element="tns:reopenCaseResponse" name="reopenCaseResponse"/>
+
+ </message>
+
+ <message name="closeTaskRequest">
+
+  <part element="tns:closeTaskRequest" name="closeTaskRequest"/>
+
+ </message>
+
+ <message name="closeTaskResponse">
+
+  <part element="tns:closeTaskResponse" name="closeTaskResponse"/>
+
+ </message>
+
+ <message name="closeCaseRequest">
+
+  <part element="tns:closeCaseRequest" name="closeCaseRequest"/>
+
+ </message>
+
+ <message name="closeCaseResponse">
+
+  <part element="tns:closeCaseResponse" name="closeCaseResponse"/>
+
+ </message>
+
+ <message name="transferTaskRequest">
+
+  <part element="tns:transferTaskRequest" name="transferTaskRequest"/>
+
+ </message>
+
+ <message name="transferTaskResponse">
+
+  <part element="tns:transferTaskResponse" name="transferTaskResponse"/>
+
+ </message>
+
+ <message name="mergeTaskRequest">
+
+  <part element="tns:mergeTaskRequest" name="mergeTaskRequest"/>
+
+ </message>
+
+ <message name="mergeTaskResponse">
+
+  <part element="tns:mergeTaskResponse" name="mergeTaskResponse"/>
+
+ </message>
+
+ <message name="sendTaskRequest">
+
+  <part element="tns:sendTaskRequest" name="sendTaskRequest"/>
+
+ </message>
+
+ <message name="sendTaskResponse">
+
+  <part element="tns:sendTaskResponse" name="sendTaskResponse"/>
+
+ </message>
+
+ <message name="deleteTaskRequest">
+
+  <part element="tns:deleteTaskRequest" name="deleteTaskRequest"/>
+
+ </message>
+
+ <message name="deleteTaskResponse">
+
+  <part element="tns:deleteTaskResponse" name="deleteTaskResponse"/>
+
+ </message>
+
+ <portType name="TaskServicePort">
+
+  <documentation>
+The TaskService contains Task related operations. A Task is associated with a case in AudaNet and
+    contains the complete case data. The TaskService allows to insert and retrieve task data in the AudaNet server
+    </documentation>
+
+  <operation name="ping">
+
+   <documentation>
+Does nothing else than returning a fixed response. This can be used to test the connection to and the
+      SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation
+       </documentation>
+
+   <input message="tns:pingRequest" name="pingRequest"/>
+
+   <output message="tns:pingResponse" name="pingResponse"/>
+
+  </operation>
+
+  <operation name="executeAction">
+
+   <documentation>
+A generic operation to executes an action. The action is specified as parameter. All operations in this
+      service can also be invoked here, by specifying their operation name as action parameter (e.g.
+      action=&quot;getTaskList&quot;).
+      This serves two purposes: 1) new actions and customer specific actions can be added to this
+      service without interface change. 2) a generic way to invoke operations.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+         </documentation>
+
+   <input message="tns:executeActionRequest" name="executeActionRequest"/>
+
+   <output message="tns:executeActionResponse" name="executeActionResponse"/>
+
+  </operation>
+
+  <operation name="createTask">
+
+   <documentation>
+Creates a new task in a new or existing case on the AudaNet platform. The payload contains the task
+      XML.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;requestStylesheet &quot;: Name of the XSLT stylesheet that should be applied to the payload to transform it to SAXIF.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;markForDownload &quot;: Specifies if the task should be marked in the CaseManager after the upload. Allowed values: true,
+        false. Default: false.
+      * Parameter &quot;checkMandatoryFieldsAtUpload &quot;: Specifies if mandatory fields should be checked. Operation fails if at least one of the fields
+        defined as mandatory for an upload are not specified. Allowed values: true, false. Default: false.
+      * Parameter &quot;sendTo &quot;: After creating, sends the task to a partner. The parameter value contains an Id type prefix, followed
+        by a colon and the actual Id of the receiver. The type of the Id can be one of: MemberId, LoginId, CustomerId,
+        CommId,ExternalOrganisationId.
+        Examples: 'LoginId:de_repairer', 'CommId:DE123456'
+      
+      * Parameter &quot;sendComment &quot;: Comment to be sent along with the task to the receiver. This parameter is only relevant in combination with
+        'sendTo' parameter and is ignored if 'sendTo' is not set.
+      * Parameter &quot;clientSpecifiedIDs &quot;: Specifies if the task in the payload specifies the taskId and caseId. This is only supported for
+        a limited set of applications. Allowed values: true, false. Default: false.
+      * Parameter &quot;queueIfSystemDown &quot;: Queue the operation if the system is down. The operation will be executed once the system is up.
+        The acknowledge indicates if the operation has been executed immediately or queued.
+        Allowed values: true, false. Default: false.
+      * Parameter &quot;resolveInsuranceCompanyById &quot;: Identifier of an insurance organization. Value contains type prefix (can be MemberId, LoginId, CustomerId, CommId)
+      	and the corresponding identifier value, separated by colon (Ex. CommId:123456). If the parameter is provided then insurance
+      	company data in task (Task/BasicClaimData/PolicyData/InsuranceCompany) will be replaced with the specified insurance
+      	company data.
+      * Parameter &quot;identifyVehicle &quot;: Possible values: true, false, force.
+      If set to true, vehicle identification will be executed for the task being created and vehicle data will be added to the task and
+      persisted. Vehicle identification will not be executed if vehicle data already present in the created task.
+      If set to false, vehicle identification will not be executed.
+      If set to force, vehicle identification will always be executed for the task being created and vehicle data will be added
+      to the task and persisted, regardless if vehicle data is already present in the created task.
+      * Parameter &quot;fillParticipant: &quot;: This is a parametrized parameter and may be specified more than once.
+       The parameter key should follow the pattern ‘fillParticipant:CaseMemberRole’
+       and the value should follow the pattern ‘IdType:id’ (similar to 'sendTo' parameter), where:
+       1. MemberRole should be an enumeration item from CaseMemberRoleType
+       2. IdType should be the type of member identification, i.e. LoginId, MemberId etc., similar to ‘sendTo’ parameter for example
+       3. Id should be the actual user id based on the IdType
+       Examples:
+       Key: 'fillParticipant:Bodyshop', value: 'ExternalOrganisationId:12345'
+       Key: 'fillParticipant:Insurer', value: 'LoginId:de_insurer'
+      
+      * Parameter &quot;selectPartnershipById &quot;: This parameter is used to identify the partnership that will be used to fill all
+       the partnership-related information in the task provided an appropriate transformation is configured.
+       The value should follow the pattern ‘IdType:id’ (similar to 'sendTo' parameter), where:
+       1. IdType should be the type of partnership identification, currently
+          one of: PartnershipId, DebtorNr, CreditorNr, VehicleType
+       2. Id should be the actual partnership id based on the IdType
+       Examples:
+       Key: 'selectPartnershipById', value: 'CreditorNr:12345'
+      
+      * Parameter &quot;sendTaskToDms &quot;: This parameter is used to trigger an additional request to a dealer management system during a task create operation.
+      The value of this parameter defines the destination dealer management system. Allowed values: VW. Default: -/-.
+      Note that there are a few preconditions, to send a task to a dealer management system. For example: to send a task to a Volkswagen DMS,
+      the foreignCaseId must be set.
+      
+      * Parameter &quot;retrieveTaskFromDms &quot;: This parameter is used to trigger an additional request to a dealer management system during a task create operation.
+      The value of this parameter defines the destination dealer management system. Allowed values are: VW. Default: -/-.
+      Note that there are a few preconditions, to retrieve a task from a dealer management system. For example: to retrieve a task from a Volkswagen DMS,
+      the foreignCaseId must be defined.
+      
+      * Parameter &quot;sendOnlyLastCalculation &quot;: This parameter might be used in combination with the sendTo parameter to send only the last
+        calculation with result. Allowed values: true, false. Default: false.
+         </documentation>
+
+   <input message="tns:createTaskRequest" name="createTaskRequest"/>
+
+   <output message="tns:createTaskResponse" name="createTaskResponse"/>
+
+  </operation>
+
+  <operation name="updateTask">
+
+   <documentation>
+Updates an existing task with the data in the payload. The task to update is identified by the
+      ItemId
+      (&quot;TaskId&quot;) and the CaseId in the payload task.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;requestStylesheet &quot;: Name of the XSLT stylesheet that should be applied to the payload to transform it to SAXIF.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;markForDownload &quot;: Specifies if the task should be marked in the CaseManager after the upload. Allowed values: true,
+        false. Default: false.
+      * Parameter &quot;checkMandatoryFieldsAtUpload &quot;: Specifies if mandatory fields should be checked. Operation fails if at least one of the fields
+        defined as mandatory for an upload are not specified. Allowed values: true, false. Default: false.
+      * Parameter &quot;sendTo &quot;: After updating, sends the task to a partner. The parameter value contains an Id type prefix, followed by a
+        colon and the actual Id of the receiver. The type of the Id can be one of: MemberId, LoginId, CustomerId, CommId,
+        ExternalOrganisationId. Examples: 'LoginId:de_repairer', 'CommId:DE123456'
+      
+      * Parameter &quot;sendComment &quot;: Comment to be sent along with the task to the receiver. This parameter is only relevant in combination with
+        'sendTo' parameter and is ignored if 'sendTo' is not set.
+      * Parameter &quot;queueIfSystemDown &quot;: Queue the operation if the system is down. The operation will be executed once the system is up.
+        The acknowledge indicates if the operation has been executed immediately or queued.
+        Allowed values: true, false. Default: false.
+      * Parameter &quot;unlockBeforeUpdate &quot;: Unlock the task before updating. Requires the UNLOCK data access right BRE rule to be set. If the task is not locked,
+      an error is returned. The Unlock event is also written.
+      * Parameter &quot;identifyVehicle &quot;: Possible values: true, false, force.
+      If set to true, vehicle identification will be executed for the task being created and vehicle data will be added to the task and
+      persisted. Vehicle identification will not be executed if vehicle data already present in the created task.
+      If set to false, vehicle identification will not be executed.
+      If set to force, vehicle identification will always be executed for the task being created and vehicle data will be added
+      to the task and persisted, regardless if vehicle data is already present in the created task.
+      * Parameter &quot;fillParticipant: &quot;: This is a parametrized parameter and may be specified more than once.
+       The parameter key should follow the pattern ‘fillParticipant:CaseMemberRole’
+       and the value should follow the pattern ‘IdType:id’ (similar to 'sendTo' parameter), where:
+       1. MemberRole should be an enumeration item from CaseMemberRoleType
+       2. IdType should be the type of member identification, i.e. LoginId, MemberId etc., similar to ‘sendTo’ parameter for example
+       3. Id should be the actual user id based on the IdType
+       Examples:
+       Key: 'fillParticipant:Bodyshop', value: 'ExternalOrganisationId:12345'
+       Key: 'fillParticipant:Insurer', value: 'LoginId:de_insurer'
+      
+      * Parameter &quot;selectPartnershipById &quot;: This parameter is used to identify the partnership that will be used to fill all
+       the partnership-related information in the task provided an appropriate transformation is configured.
+       The value should follow the pattern ‘IdType:id’ (similar to 'sendTo' parameter), where:
+       1. IdType should be the type of partnership identification, currently
+          one of: PartnershipId, DebtorNr, CreditorNr, VehicleType
+       2. Id should be the actual partnership id based on the IdType
+       Examples:
+       Key: 'selectPartnershipById', value: 'CreditorNr:12345'
+      
+      * Parameter &quot;updateAttachmentMetadata &quot;: When set to true, the service will merge the uploaded exisiting attachments using their
+      ItemId. The attachment content will not be updated however. The only fields that are updated by this operation are:
+      Category, Language, Status, AttachmentProperty, AttachmentContent, Annotation, GuideNumber
+      * Parameter &quot;sendTaskToDms &quot;: This parameter is used to trigger an additional request to a dealer management system during a task update operation.
+      The value of this parameter defines the destination dealer management system. Allowed values: VW. Default: -/-.
+      Note that there are a few preconditions, to send a task to a dealer management system. For example: to send a task to a Volkswagen DMS,
+      the foreignCaseId must be set.
+      
+      * Parameter &quot;retrieveTaskFromDms &quot;: This parameter is used to trigger an additional request to a dealer management system during a task update operation.
+      The value of this parameter defines the destination dealer management system. Allowed values are: VW. Default: -/-.
+      Note that there are a few preconditions, to retrieve a task from a dealer management system. For example: to retrieve a task from a Volkswagen DMS,
+      the foreignCaseId must be defined.
+      
+      * Parameter &quot;sendOnlyLastCalculation &quot;: This parameter might be used in combination with the sendTo parameter to send only the last
+        calculation with result. Allowed values: true, false. Default: false.
+         </documentation>
+
+   <input message="tns:updateTaskRequest" name="updateTaskRequest"/>
+
+   <output message="tns:updateTaskResponse" name="updateTaskResponse"/>
+
+  </operation>
+
+  <operation name="getTask">
+
+   <documentation>
+Retrieves the task specified by the taskId parameter. The task is returned as XML in the payload.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to download. Required parameter
+      * Parameter &quot;responseStylesheet &quot;: Name of the XSLT stylesheet that should be applied to the returned payload to transform it to the
+        customer specific format.
+      * Parameter &quot;nocalculation &quot;: Specifies if calculations should be excluded from the returned task. Allowed values: true, false.
+        Default: false
+      * Parameter &quot;onlySelectedCalcs &quot;: Specifies if the calculation list in the returned task should only contain
+        selected calculations or
+        all calculations. A calculation is selected if it has the field Checked = Yes.
+        Allowed values: true, false. Default: false
+      * Parameter &quot;lastCalculationOnly &quot;: Specifies if only the latest calculation with result in calculation list should be included in the
+        returned task. This parameter can be used with parameter onlySelectedCalcs. In this case only the latest
+        selected calculation is returned. Calculations are sorted by CLASSResult.CalculationDateTime (when
+        CLASSResult.CalculationDateTime is null use ClassResult.CaptureDateTime).
+        Allowed values: true, false. Default:
+        false
+      * Parameter &quot;lastCheckedCalculationOnly &quot;: It returns the last calculation accordingly to the rules defined in parameter lastCalculationOnly but
+        only for checked calculations. If there are none non-checked calculations the behaviour of this parameter is the
+        same as lastCalculationOnly (all calculations are considered).
+        Allowed values: true, false. Default: false
+      * Parameter &quot;calculationInProgressOnly &quot;: When set to true, will return the task with only the calculation in progress, 
+			i.e. calculation that has InProgress tag set to true, or otherwise, if such calculation
+			is not present, will return the last available calculation.
+		
+      * Parameter &quot;withCarValuations &quot;: Specifies if the CarValuations element, if present, should be included in the returned task. Allowed
+        values: true, false. Default: false
+      * Parameter &quot;withPerformanceRatings &quot;: Specifies if the PerformanceRatingList element, if present, should be included in the returned task.
+        Allowed values: true, false. Default: false
+      * Parameter &quot;withVehicleHealthCheck &quot;: Specifies if the Vehicle Health Check Scan data will be appended to the task. Default: false
+      * Parameter &quot;removeMark &quot;: If true, the mark in the CaseManager on this task is removed when downloading. Allowed values: true,
+        false. Default: false
+      * Parameter &quot;noAttachmentContents &quot;: By default, the attachments in the returned task include their content (base64 encoded). If this
+        parameter is true, only the attachment metadata (ItemId, FileName etc.) is returned in the task. Their contents
+        can be retrieved in a separate call to the AttachmentService. This considerably reduces the response size.
+        Allowed values: true, false. Default: false
+      * Parameter &quot;callingApplication &quot;: A GeneratorType assigned to the requesting client. The parameter is mandatory if corresponding
+      	service parameter specified and must be provided with each getTask operation invocation. The parameter is
+      	optional if it is not enforced by the corresponding service parameter.
+      * Parameter &quot;newAttachmentsOnly &quot;: Only return attachments that have been added to the task since the last time the user has
+      	downloaded the task.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;suppressWritingDownloadEvent &quot;: If set to true, the getTask operation does not write the TaskDownloaded event to the task.
+      * Parameter &quot;withComplianceCheckResult &quot;: If set to true, the getTask operation will return the compliance rules check result associated with the task.
+      * Parameter &quot;withRepairWatchId &quot;: When set to true, the getTask operation will return the ID of RepairWatch data for the case, if there is existing one.   </documentation>
+
+   <input message="tns:getTaskRequest" name="getTaskRequest"/>
+
+   <output message="tns:getTaskResponse" name="getTaskResponse"/>
+
+  </operation>
+
+  <operation name="getTaskList">
+
+   <documentation>
+Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter
+      criteria specified as parameters.
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;fieldsToReturn &quot;: Comma separated list of child element names of the TaskProxy SAXIF type. The returned task list will
+        contain these fields, if they are set.
+      * Parameter &quot;fromDate &quot;: Format [yyyy-mm-ddT00:00:00]. Filters the result list by returning only tasks that are newer (based
+        on creation date) than the provided date. The time part of this parameter is optional. For example, the value
+        &quot;2008-06-26&quot; is valid and is extended to &quot;2008-06-26T00:00:00&quot;.
+      * Parameter &quot;toDate &quot;: Format [yyyy-mm-ddT00:00:00]. Filters the result list by returning only tasks that are older (based
+        on creation date) than the provided date. The time part of this parameter is optional. For example, the value
+        &quot;2008-06-26&quot; is valid and is extended to &quot;2008-06-26T23:59:59&quot;.
+      * Parameter &quot;box &quot;: Specifies the CaseManager box from which the task list is retrieved. Possible values:
+        [OPENED|SENT|CLOSED|DELETED|HISTORICAL_RECORDS|ALL]. Default: OPENED.
+      * Parameter &quot;onlyMarkedTasks &quot;: Filters the result list by returning only marked tasks. Tasks can be marked from within CaseManager
+        or with the 'markForDownload' parameter in the createTask or updateTask operations.
+      * Parameter &quot;filterOnField &quot;: Can be used to filter results that contain a specific value in a field (equality filter) or time
+        range in a date field (time range filter).
+      * Parameter &quot;filterValue &quot;: Specify the value, possibly with wildcard, that the field must have or from/to date to allow the task
+        to be retrieved. Use only in combination with the filterOnField parameter.
+      * Parameter &quot;maxCount &quot;: Restricts the size of the returning list to the specified value.
+      * Parameter &quot;startAtIndex &quot;: Pagination feature, in combination with maxCount parameter. Allows to retrieve the &quot;next&quot; block of
+        items. The value is 1-based (first item has index 1).
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;sortBy &quot;: Specifies the field to sort the results by. The default sorting direction is descending.
+      If not specified, 'CreationDate' will be used
+      * Parameter &quot;sortDirection &quot;: Specifies the sorting direction. Possible values: 'ASC', 'DESC'.
+      If 'sortBy' parameter is not specified, 'CreationDate' will be used as its value
+      * Parameter &quot;repairerCommunityId &quot;: This parameter takes either the member id of the community or the keyword NONE.
+      If a community Id is present, only the tasks where the repairer belongs to that community will be returned.
+      If NONE is specified, only the tasks where the repairer do not belong to either community will be returned.
+      The communities have to be defined on the organization or the root organization of the requesting member.   </documentation>
+
+   <input message="tns:getTaskListRequest" name="getTaskListRequest"/>
+
+   <output message="tns:getTaskListResponse" name="getTaskListResponse"/>
+
+  </operation>
+
+  <operation name="findTasks">
+
+   <documentation>
+Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter
+      criteria specified as parameters.
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;fieldsToReturn &quot;: Comma separated list of child element names of the TaskProxy SAXIF type. The returned task list will
+        contain these fields, if they are set.
+      * Parameter &quot;view &quot;: Specifies the view from which the task list is retrieved. Possible values:
+        [open|sent|closed|deleted|copied|stopped|historical_records|all]. Default: open.
+      * Parameter &quot;onlyMarkedTasks &quot;: Filters the result list by returning only marked tasks. Tasks can be marked from within CaseManager
+        or with the 'markForDownload' parameter in the createTask or updateTask operations.
+      * Parameter &quot;maxCount &quot;: Restricts the size of the returning list to the specified value.
+      * Parameter &quot;startAtIndex &quot;: Pagination feature, in combination with maxCount parameter. Allows to retrieve the &quot;next&quot; block of
+        items. The value is 1-based (first item has index 1).
+      * Parameter &quot;filter: &quot;: 'filter:' keyword followed by the field to filter on. The value of the parameter is the actual
+      	filter value. Additionally, for date type variables it can be extended to 'filter:param:from' and 'filter:param:to'
+      	where 'param' is a date type parameter name
+      	Examples: 'filter:TaskId', value: '111'; 'filter:CreationDate:from', value: '2012-01-01';
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;sortBy &quot;: Specifies the field to sort the results by. The default sorting direction is descending.
+      If not specified, 'CreationDate' will be used
+      * Parameter &quot;sortDirection &quot;: Specifies the sorting direction. Possible values: 'ASC', 'DESC'.
+      If 'sortBy' parameter is not specified, 'CreationDate' will be used as its value
+      * Parameter &quot;repairerCommunityId &quot;: This parameter takes either the member id of the community or the keyword NONE.
+      If a community Id is present, only the tasks where the repairer belongs to that community will be returned.
+      If NONE is specified, only the tasks where the repairer do not belong to either community will be returned.
+      The communities have to be defined on the organization or the root organization of the requesting member.   </documentation>
+
+   <input message="tns:findTasksRequest" name="findTasksRequest"/>
+
+   <output message="tns:findTasksResponse" name="findTasksResponse"/>
+
+  </operation>
+
+  <operation name="reassignTask">
+
+   <documentation>
+Retrieves the task specified by the taskId parameter and attempts to reassign it to the specified member (parameter 'assignTo')
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to reassign. Required parameter
+      * Parameter &quot;assignTo &quot;: Specified the task receiver id in the format IDENTIFIER_TYPE:IDENTIFIER.
+      The IDENTIFIER_TYPE is a classifier string which can have one of the following values: MemberId|Login|CustomerId|CommId.
+      The IDENTIFIER is actual identifier value which corresponds to the IDENTIFIER_TYPE provided. Required parameter
+      * Parameter &quot;unlock &quot;: If set to true then service unlocks the task(if it is locked) before reassigning. Default value is false. Optional parameter
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:reassignTaskRequest" name="reassignTaskRequest"/>
+
+   <output message="tns:reassignTaskResponse" name="reassignTaskResponse"/>
+
+  </operation>
+
+  <operation name="reopenTask">
+
+   <documentation>
+Retrieves the task specified by the taskId parameter and attempts to reopen it using the current member permissions
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to reopen. Required parameter
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:reopenTaskRequest" name="reopenTaskRequest"/>
+
+   <output message="tns:reopenTaskResponse" name="reopenTaskResponse"/>
+
+  </operation>
+
+  <operation name="reopenCase">
+
+   <documentation>
+Retrieves the case specified by the caseId parameter and attempts to reopen it using the current member permissions
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;caseId &quot;: Specified the Id of the case to reopen. Required parameter
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:reopenCaseRequest" name="reopenCaseRequest"/>
+
+   <output message="tns:reopenCaseResponse" name="reopenCaseResponse"/>
+
+  </operation>
+
+  <operation name="closeTask">
+
+   <documentation>
+Retrieves the task specified by the taskId parameter and attempts to close it using the current member permissions
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to close. Required parameter
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:closeTaskRequest" name="closeTaskRequest"/>
+
+   <output message="tns:closeTaskResponse" name="closeTaskResponse"/>
+
+  </operation>
+
+  <operation name="closeCase">
+
+   <documentation>
+Retrieves the case specified by the casekId parameter and attempts to close it using the current member permissions
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;caseId &quot;: Specified the Id of the case to close. Required parameter
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:closeCaseRequest" name="closeCaseRequest"/>
+
+   <output message="tns:closeCaseResponse" name="closeCaseResponse"/>
+
+  </operation>
+
+  <operation name="transferTask">
+
+   <documentation>
+This operation transfers a task to the user specified in transferTo or the sender if it is omitted.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to reassign. Required parameter
+      * Parameter &quot;transferTo &quot;: The member to whom the task should be transferred to.
+      	Optional parameter; if not specified, the task is transferred to the calling member.
+      	Format IDENTIFIER_TYPE:IDENTIFIER.
+      	The IDENTIFIER_TYPE is a classifier string which can have one of the following values: MemberId|Login|CustomerId|CommId.
+      	The IDENTIFIER is actual identifier value which corresponds to the IDENTIFIER_TYPE provided.
+      
+      * Parameter &quot;comment &quot;: 
+      	a short text describing the reason for the transfer. This is the message sent to the new owner of the task,
+      	if the transfer results in a send action. This comment is also written to the transfer event.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:transferTaskRequest" name="transferTaskRequest"/>
+
+   <output message="tns:transferTaskResponse" name="transferTaskResponse"/>
+
+  </operation>
+
+  <operation name="mergeTask">
+
+   <documentation>
+This operation merges a sender's task in the 'Copied' state into the sender's worklist.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to merge. Required parameter
+      * Parameter &quot;copyOnMerge &quot;: optional boolean parameter - indicates if the merge should create a copy or only update the existing task
+      
+      * Parameter &quot;comment &quot;: 
+      	a short text describing the reason for the merge.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:mergeTaskRequest" name="mergeTaskRequest"/>
+
+   <output message="tns:mergeTaskResponse" name="mergeTaskResponse"/>
+
+  </operation>
+
+  <operation name="sendTask">
+
+   <documentation>
+This operation sends the current user's task identified by taskId to the member identified by sendTo.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to send. Required parameter
+      * Parameter &quot;sendTo &quot;: 
+        The member receiving the task. The parameter value contains an Id type prefix, followed
+        by a colon and the actual Id of the receiver. The type of the Id can be one of: MemberId, LoginId, CustomerId,
+        CommId,ExternalOrganisationId.
+        Examples: 'LoginId:de_repairer', 'CommId:DE123456'
+      
+      * Parameter &quot;sendComment &quot;: 
+        Optional parameter. A short text describing the reason for the send.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.
+      * Parameter &quot;sendOnlyLastCalculation &quot;: This parameter might be used in combination with the sendTo parameter to send only the last
+        calculation with result. Allowed values: true, false. Default: false.
+         </documentation>
+
+   <input message="tns:sendTaskRequest" name="sendTaskRequest"/>
+
+   <output message="tns:sendTaskResponse" name="sendTaskResponse"/>
+
+  </operation>
+
+  <operation name="deleteTask">
+
+   <documentation>
+This operation deletes the current user's task identified by taskId.
+    
+      * Parameter &quot;loginId&quot;: The loginId (&quot;username&quot;) of the AudaNet account, for authentication
+      * Parameter &quot;password&quot;: The password of the AudaNet account, for authentication
+      
+      * Parameter &quot;taskId &quot;: Specified the Id of the task to delete. Required parameter
+      * Parameter &quot;comment &quot;: 
+      	a short text describing the reason for the delete.
+      
+      * Parameter &quot;processAsUser &quot;: Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:deleteTaskRequest" name="deleteTaskRequest"/>
+
+   <output message="tns:deleteTaskResponse" name="deleteTaskResponse"/>
+
+  </operation>
+
+ </portType>
+
+ <binding name="TaskServiceSoap" type="tns:TaskServicePort">
+
+  <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+  <operation name="ping">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="pingRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="pingResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="executeAction">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="executeActionRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="executeActionResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="createTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="createTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="createTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="updateTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="updateTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="updateTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="getTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="getTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="getTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="getTaskList">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="getTaskListRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="getTaskListResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="findTasks">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="findTasksRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="findTasksResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="reassignTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="reassignTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="reassignTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="reopenTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="reopenTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="reopenTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="reopenCase">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="reopenCaseRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="reopenCaseResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="closeTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="closeTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="closeTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="closeCase">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="closeCaseRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="closeCaseResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="transferTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="transferTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="transferTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="mergeTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="mergeTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="mergeTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="sendTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="sendTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="sendTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="deleteTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="deleteTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="deleteTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+ </binding>
+
+ <service name="TaskService">
+
+  <documentation>
+The TaskService contains Task related operations. A Task is associated with a case in AudaNet and
+    contains the complete case data. The TaskService allows to insert and retrieve task data in the AudaNet server
+    </documentation>
+
+  <port binding="tns:TaskServiceSoap" name="TaskServicePort">
+
+   <wsdlsoap:address location="https://www-a.audatex.net/b2b/services/TaskService_v1"/>
+
+  </port>
+
+ </service>
+
+</definitions>

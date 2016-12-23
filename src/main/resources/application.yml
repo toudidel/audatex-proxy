@@ -1,0 +1,13 @@
+application:
+  wsdl: https://www-a.audatex.net/b2b/services/TaskService_v1?wsdl
+
+logging:
+  level:
+    root: INFO
+    com:
+      ulisesbocchio: ERROR
+    org:
+      apache: ERROR
+      springframework: ERROR
+    pl:
+      coderion: INFO
