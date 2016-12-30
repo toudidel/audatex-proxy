@@ -1,5 +1,13 @@
-application:
+audatex:
   wsdl: https://www-a.audatex.net/b2b/services/TaskService_v1?wsdl
+  loginId: ENC(OH9/d2gdPURGfAWuHf4sT38gkEFsqRTV)
+  password: ENC(c650q72/tigo+cQC2bARBW5pXE+nY8wk)
+  fieldsToReturn: CaseId,TaskId,ClaimNumber,DisplayName,PlateNumber,Creator,TaskStatus,ManufacturerName,VehicleOwnerName,CreationDate,LastEditedDateTime,TaskProgress,VIN
+  onlyMarkedTasks: false
+  returnPayloadAsXML: true
+
+server:
+  port: 8088
 
 logging:
   level:
