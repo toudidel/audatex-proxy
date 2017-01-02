@@ -8,5 +8,5 @@ import lombok.Setter;
  */
 public class FindTasksResponse {
 
-    @Getter @Setter private FindTasksPayload payload;
+    @Getter @Setter private FindTasksResponsePayload payload;
 }

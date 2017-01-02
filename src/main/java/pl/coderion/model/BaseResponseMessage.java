@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * Copyright (C) Coderion sp. z o.o.
  */
-public class PingResponseMessage {
+public class BaseResponseMessage {
 
     @Getter @Setter private String messageCode;
 

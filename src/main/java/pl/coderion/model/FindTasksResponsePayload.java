@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Copyright (C) Coderion sp. z o.o.
  */
 @XmlRootElement(name = "payload", namespace = "http://serviceinterface_v1.b2b.audatex.com")
-public class FindTasksPayload {
+public class FindTasksResponsePayload {
 
     private TaskProxyList taskProxyList;
 

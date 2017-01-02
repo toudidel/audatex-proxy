@@ -1,6 +1,5 @@
 package pl.coderion.controller;
 
-import com.audatex.b2b.serviceinterface_v1.B2BMessage;
 import com.audatex.b2b.serviceinterface_v1.B2BRequest;
 import com.audatex.b2b.serviceinterface_v1.B2BResponse;
 import com.audatex.b2b.serviceinterface_v1.TaskServicePort;
@@ -17,11 +16,13 @@ import org.w3c.dom.Document;
 import pl.coderion.config.AppConfig;
 import pl.coderion.model.*;
 import pl.coderion.util.ParameterUtil;
+import pl.coderion.util.ResponseUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.util.ArrayList;
+import javax.xml.transform.dom.DOMResult;
 
 /**
  * Copyright (C) Coderion sp. z o.o.
@@ -44,7 +45,6 @@ public class AudatexController {
         logger.info("> ping");
 
         PingResponse pingResponse = new PingResponse();
-        pingResponse.setMessages(new ArrayList<>());
 
         B2BResponse response = taskServicePort.ping(new B2BRequest());
 
@@ -57,16 +57,7 @@ public class AudatexController {
         pingResponse.setReturnCode(response.getReturnCode());
         pingResponse.setTimestamp(response.getTimestamp().toGregorianCalendar().getTime());
 
-        for (B2BMessage message : response.getMessage()) {
-            logger.info(String.format("Message: %s (%s) - %s", message.getMessageCode(), message.getSeverity(), message.getText()));
-
-            PingResponseMessage pingResponseMessage = new PingResponseMessage();
-            pingResponseMessage.setMessageCode(message.getMessageCode());
-            pingResponseMessage.setSeverity(message.getSeverity());
-            pingResponseMessage.setText(message.getText());
-
-            pingResponse.getMessages().add(pingResponseMessage);
-        }
+        ResponseUtil.parseMessages(pingResponse, response.getMessage());
 
         return pingResponse;
     }
@@ -77,26 +68,26 @@ public class AudatexController {
 
         FindTasksResponse findTasksResponse = new FindTasksResponse();
 
-        B2BRequest findTasksRequest = new B2BRequest();
+        B2BRequest request = new B2BRequest();
 
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.FIELDS_TO_RETURN, appConfig.getFieldsToReturn()));
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.ONLY_MARKED_TASKS, appConfig.getOnlyMarkedTasks()));
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.FILTER_CLAIM_NUMBER, claimNumber));
-        findTasksRequest.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, appConfig.getReturnPayloadAsXML()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.FIELDS_TO_RETURN, appConfig.getFieldsToReturn()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.ONLY_MARKED_TASKS, appConfig.getOnlyMarkedTasks()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.FILTER_CLAIM_NUMBER, claimNumber));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, appConfig.getReturnPayloadAsXML()));
 
-        B2BResponse response = taskServicePort.findTasks(findTasksRequest);
+        B2BResponse response = taskServicePort.findTasks(request);
 
         if (response.getPayload() instanceof ElementImpl) {
             ElementImpl elementNS = (ElementImpl) response.getPayload();
             Document document = elementNS.getOwnerDocument();
 
             try {
-                JAXBContext jaxbContext = JAXBContext.newInstance(FindTasksPayload.class);
+                JAXBContext jaxbContext = JAXBContext.newInstance(FindTasksResponsePayload.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                FindTasksPayload findTasksPayload = (FindTasksPayload) jaxbUnmarshaller.unmarshal(document);
-                findTasksResponse.setPayload(findTasksPayload);
+                FindTasksResponsePayload findTasksResponsePayload = (FindTasksResponsePayload) jaxbUnmarshaller.unmarshal(document);
+                findTasksResponse.setPayload(findTasksResponsePayload);
             } catch (JAXBException e) {
                 logger.error("An error occured during unmarshalling payload", e);
             }
@@ -112,5 +103,46 @@ public class AudatexController {
         }
 
         return findTasksResponse;
+    }
+
+    @RequestMapping("/updateTask")
+    public UpdateTaskResponse updateTask(@RequestParam(value = "taskId") String taskId,
+                                         @RequestParam(value = "caseId") String caseId,
+                                         @RequestParam(value = "author") String author,
+                                         @RequestParam(value = "orgId") String orgId,
+                                         @RequestParam(value = "text") String text,
+                                         @RequestParam(value = "commentType") String commentType,
+                                         @RequestParam(value = "category") String category) {
+
+        logger.info("> updateTask: taskId=" + taskId);
+
+        UpdateTaskResponse updateTaskResponse = new UpdateTaskResponse();
+        B2BRequest request = new B2BRequest();
+
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
+
+        DOMResult payload = new DOMResult();
+        UpdateTaskRequestPayload updateTaskRequestPayload = new UpdateTaskRequestPayload();
+        CommentList commentList = new CommentList();
+        commentList.getComments().add(new Comment(author, orgId, text, commentType, category));
+        Task task = new Task(taskId, caseId, commentList);
+        updateTaskRequestPayload.setTask(task);
+
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(UpdateTaskRequestPayload.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.marshal(updateTaskRequestPayload, payload);
+        } catch (JAXBException e) {
+            logger.error("An error occured during marshalling payload", e);
+        }
+
+        request.setPayload(payload);
+
+        B2BResponse response = taskServicePort.updateTask(request);
+
+        ResponseUtil.parseMessages(updateTaskResponse, response.getMessage());
+
+        return updateTaskResponse;
     }
 }
