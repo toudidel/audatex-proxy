@@ -5,11 +5,13 @@ import com.audatex.b2b.serviceinterface_v1.B2BResponse;
 import com.audatex.b2b.serviceinterface_v1.TaskServicePort;
 import com.sun.org.apache.xerces.internal.dom.ElementImpl;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
@@ -40,7 +42,8 @@ public class AudatexController {
     @Autowired
     AppConfig appConfig;
 
-    @RequestMapping("/ping")
+    @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
+    @RequestMapping(method = RequestMethod.GET, path = "/ping")
     public PingResponse ping() {
         logger.info("> ping");
 
@@ -62,7 +65,8 @@ public class AudatexController {
         return pingResponse;
     }
 
-    @RequestMapping("/findTasks")
+    @ApiOperation(value = "Find tasks", notes = "Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter criteria specified as parameters")
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/findTasks")
     public FindTasksResponse findTasks(@RequestParam(value = "claimNumber") String claimNumber) {
         logger.info("> findTasks: claimNumber=" + claimNumber);
 
@@ -105,7 +109,8 @@ public class AudatexController {
         return findTasksResponse;
     }
 
-    @RequestMapping("/updateTask")
+    @ApiOperation(value = "Update task", notes = "Updates an existing task with the data in the payload. The task to update is identified by the ItemId ('TaskId') and the CaseId in the payload task")
+    @RequestMapping(method = RequestMethod.POST, path = "/updateTask")
     public UpdateTaskResponse updateTask(@RequestParam(value = "taskId") String taskId,
                                          @RequestParam(value = "caseId") String caseId,
                                          @RequestParam(value = "author") String author,
