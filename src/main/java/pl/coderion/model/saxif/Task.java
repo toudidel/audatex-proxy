@@ -1,10 +1,11 @@
-package pl.coderion.model;
+package pl.coderion.model.saxif;
 
 import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Copyright (C) Coderion sp. z o.o.
  */
+
 public class Task {
 
     private String caseId;
@@ -22,7 +23,7 @@ public class Task {
         this.commentList = commentList;
     }
 
-    @XmlElement(name = "CaseId", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "CaseId")
     public String getCaseId() {
         return caseId;
     }
@@ -31,7 +32,7 @@ public class Task {
         this.caseId = caseId;
     }
 
-    @XmlElement(name = "ItemId", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "ItemId")
     public String getTaskId() {
         return taskId;
     }
@@ -44,7 +45,7 @@ public class Task {
         return commentList;
     }
 
-    @XmlElement(name = "CommentList", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "CommentList")
     public void setCommentList(CommentList commentList) {
         this.commentList = commentList;
     }

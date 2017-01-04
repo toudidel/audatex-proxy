@@ -1,4 +1,4 @@
-package pl.coderion.model;
+package pl.coderion.model.saxif;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -28,7 +28,7 @@ public class Comment {
         this.category = category;
     }
 
-    @XmlElement(name = "Author", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "Author")
     public String getAuthor() {
         return author;
     }
@@ -37,7 +37,7 @@ public class Comment {
         this.author = author;
     }
 
-    @XmlElement(name = "ResponsibleOrganizationId", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "ResponsibleOrganizationId")
     public String getResponsibleOrganizationId() {
         return responsibleOrganizationId;
     }
@@ -46,7 +46,7 @@ public class Comment {
         this.responsibleOrganizationId = responsibleOrganizationId;
     }
 
-    @XmlElement(name = "Text", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "Text")
     public String getText() {
         return text;
     }
@@ -55,7 +55,7 @@ public class Comment {
         this.text = text;
     }
 
-    @XmlElement(name = "CommentType", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "CommentType")
     public String getCommentType() {
         return commentType;
     }
@@ -64,7 +64,7 @@ public class Comment {
         this.commentType = commentType;
     }
 
-    @XmlElement(name = "Category", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "Category")
     public String getCategory() {
         return category;
     }

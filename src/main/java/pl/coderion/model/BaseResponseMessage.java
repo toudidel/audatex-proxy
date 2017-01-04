@@ -16,5 +16,7 @@ public class BaseResponseMessage {
 
     @Getter @Setter private String text;
 
+    @Getter @Setter private String localizedText;
+
     @Getter @Setter private List<String> additionalInfo;
 }

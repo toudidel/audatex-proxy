@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import pl.coderion.config.AppConfig;
 import pl.coderion.model.*;
+import pl.coderion.model.saxif.Comment;
+import pl.coderion.model.saxif.CommentList;
+import pl.coderion.model.saxif.Task;
+import pl.coderion.model.ser.TaskPayload;
 import pl.coderion.util.ParameterUtil;
 import pl.coderion.util.ResponseUtil;
 import pl.coderion.util.SOAPLoggingHandler;
@@ -54,7 +58,7 @@ public class AudatexController {
     Jaxb2Marshaller marshaller;
 
     @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
-    @RequestMapping(method = RequestMethod.GET, path = "/ping")
+    @RequestMapping(method = RequestMethod.POST, path = "/ping")
     public PingResponse ping() {
         logger.info("> ping");
 
@@ -67,17 +71,13 @@ public class AudatexController {
         logger.info("Timestampe: " + response.getTimestamp());
         logger.info("Login ID: " + response.getLoginId());
 
-        pingResponse.setHostName(response.getHostName());
-        pingResponse.setReturnCode(response.getReturnCode());
-        pingResponse.setTimestamp(response.getTimestamp().toGregorianCalendar().getTime());
-
-        ResponseUtil.parseMessages(pingResponse, response.getMessage());
+        ResponseUtil.parseMessages(pingResponse, response);
 
         return pingResponse;
     }
 
     @ApiOperation(value = "Find tasks", notes = "Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter criteria specified as parameters")
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = "/findTasks")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/findTasks")
     public FindTasksResponse findTasks(@RequestParam(value = "claimNumber") String claimNumber) {
         logger.info("> findTasks: claimNumber=" + claimNumber);
 
@@ -168,8 +168,7 @@ public class AudatexController {
         }
 
         B2BResponse response = taskServicePort.updateTask(request);
-
-        ResponseUtil.parseMessages(updateTaskResponse, response.getMessage());
+        ResponseUtil.parseMessages(updateTaskResponse, response);
 
         return updateTaskResponse;
     }

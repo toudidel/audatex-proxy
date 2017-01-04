@@ -1,4 +1,7 @@
-package pl.coderion.model;
+package pl.coderion.model.ser;
+
+import pl.coderion.model.Namespaces;
+import pl.coderion.model.saxif.Task;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -6,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Copyright (C) Coderion sp. z o.o.
  */
-@XmlRootElement(name = "payload", namespace = Namespaces.SERVICE_INTERACE)
+@XmlRootElement(name = "payload")
 public class TaskPayload {
 
     private Task task;

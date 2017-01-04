@@ -1,4 +1,4 @@
-package pl.coderion.model;
+package pl.coderion.model.saxif;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class CommentList {
         this.comments = new ArrayList<>();
     }
 
-    @XmlElement(name = "Comment", namespace = Namespaces.SAXIF)
+    @XmlElement(name = "Comment")
     public List<Comment> getComments() {
         return comments;
     }
