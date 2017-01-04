@@ -7,28 +7,22 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class Task {
 
-    private String taskId;
-
     private String caseId;
+
+    private String taskId;
 
     private CommentList commentList;
 
-    public Task(String taskId, String caseId, CommentList commentList) {
+    public Task() {
+    }
+
+    public Task(String caseId, String taskId, CommentList commentList) {
         this.taskId = taskId;
         this.caseId = caseId;
         this.commentList = commentList;
     }
 
-    @XmlElement(name = "ItemId")
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    @XmlElement(name = "CaseId")
+    @XmlElement(name = "CaseId", namespace = Namespaces.SAXIF)
     public String getCaseId() {
         return caseId;
     }
@@ -37,11 +31,20 @@ public class Task {
         this.caseId = caseId;
     }
 
+    @XmlElement(name = "ItemId", namespace = Namespaces.SAXIF)
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
     public CommentList getCommentList() {
         return commentList;
     }
 
-    @XmlElement(name = "CommentList")
+    @XmlElement(name = "CommentList", namespace = Namespaces.SAXIF)
     public void setCommentList(CommentList commentList) {
         this.commentList = commentList;
     }

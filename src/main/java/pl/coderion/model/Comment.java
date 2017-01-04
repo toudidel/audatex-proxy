@@ -17,6 +17,9 @@ public class Comment {
 
     private String category;
 
+    public Comment() {
+    }
+
     public Comment(String author, String responsibleOrganizationId, String text, String commentType, String category) {
         this.author = author;
         this.responsibleOrganizationId = responsibleOrganizationId;
@@ -25,7 +28,7 @@ public class Comment {
         this.category = category;
     }
 
-    @XmlElement(name = "Author")
+    @XmlElement(name = "Author", namespace = Namespaces.SAXIF)
     public String getAuthor() {
         return author;
     }
@@ -34,7 +37,7 @@ public class Comment {
         this.author = author;
     }
 
-    @XmlElement(name = "ResponsibleOrganizationId")
+    @XmlElement(name = "ResponsibleOrganizationId", namespace = Namespaces.SAXIF)
     public String getResponsibleOrganizationId() {
         return responsibleOrganizationId;
     }
@@ -43,7 +46,7 @@ public class Comment {
         this.responsibleOrganizationId = responsibleOrganizationId;
     }
 
-    @XmlElement(name = "Text")
+    @XmlElement(name = "Text", namespace = Namespaces.SAXIF)
     public String getText() {
         return text;
     }
@@ -52,7 +55,7 @@ public class Comment {
         this.text = text;
     }
 
-    @XmlElement(name = "CommentType")
+    @XmlElement(name = "CommentType", namespace = Namespaces.SAXIF)
     public String getCommentType() {
         return commentType;
     }
@@ -61,7 +64,7 @@ public class Comment {
         this.commentType = commentType;
     }
 
-    @XmlElement(name = "Category")
+    @XmlElement(name = "Category", namespace = Namespaces.SAXIF)
     public String getCategory() {
         return category;
     }

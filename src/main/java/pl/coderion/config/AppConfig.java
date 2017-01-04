@@ -12,13 +12,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-    @Getter @Setter private String wsdl;
+    @Getter @Setter private String wsdl;                // url to WSDL file
 
-    @Getter @Setter private String loginId;
+    @Getter @Setter private Boolean debugWsMessages;    // show outbound and inbound messages
 
-    @Getter @Setter private String password;
+    @Getter @Setter private String loginId;             // login to WS
 
-    @Getter @Setter private String fieldsToReturn;
+    @Getter @Setter private String password;            // password
+
+    @Getter @Setter private String fieldsToReturn;      // set of fields need to be returned
 
     @Getter @Setter private String onlyMarkedTasks;
 

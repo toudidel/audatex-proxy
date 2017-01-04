@@ -1,5 +1,6 @@
 package pl.coderion.model;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class CommentList {
         this.comments = new ArrayList<>();
     }
 
+    @XmlElement(name = "Comment", namespace = Namespaces.SAXIF)
     public List<Comment> getComments() {
         return comments;
     }

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +20,19 @@ import pl.coderion.config.AppConfig;
 import pl.coderion.model.*;
 import pl.coderion.util.ParameterUtil;
 import pl.coderion.util.ResponseUtil;
+import pl.coderion.util.SOAPLoggingHandler;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.Handler;
+import java.util.List;
 
 /**
  * Copyright (C) Coderion sp. z o.o.
@@ -41,6 +49,9 @@ public class AudatexController {
 
     @Autowired
     AppConfig appConfig;
+
+    @Autowired
+    Jaxb2Marshaller marshaller;
 
     @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
     @RequestMapping(method = RequestMethod.GET, path = "/ping")
@@ -127,22 +138,34 @@ public class AudatexController {
         request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
         request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
 
-        DOMResult payload = new DOMResult();
-        UpdateTaskRequestPayload updateTaskRequestPayload = new UpdateTaskRequestPayload();
         CommentList commentList = new CommentList();
         commentList.getComments().add(new Comment(author, orgId, text, commentType, category));
-        Task task = new Task(taskId, caseId, commentList);
-        updateTaskRequestPayload.setTask(task);
+        Task task = new Task(caseId, taskId, commentList);
+        TaskPayload taskPayload = new TaskPayload(task);
 
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(UpdateTaskRequestPayload.class);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document document = db.newDocument();
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(TaskPayload.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.marshal(updateTaskRequestPayload, payload);
-        } catch (JAXBException e) {
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(taskPayload, document);
+
+            request.setPayload(document.getDocumentElement());
+
+        } catch (JAXBException | ParserConfigurationException e) {
             logger.error("An error occured during marshalling payload", e);
         }
 
-        request.setPayload(payload);
+        // debug outbound and inbound messages
+        if (Boolean.TRUE.equals(appConfig.getDebugWsMessages())) {
+            Binding binding = ((BindingProvider) taskServicePort).getBinding();
+            List<Handler> handlerChain = binding.getHandlerChain();
+            handlerChain.add(new SOAPLoggingHandler());
+            binding.setHandlerChain(handlerChain);
+        }
 
         B2BResponse response = taskServicePort.updateTask(request);
 
