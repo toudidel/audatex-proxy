@@ -31,6 +31,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("Audatex-Proxy-API", null, VERSION, null, (Contact) null, null, null);
+        Contact contact = new Contact("Coderion", "http://www.coderion.pl", null);
+        return new ApiInfo("audatex-proxy-api", "proxy api for audatex webservice", VERSION, null, contact, "Apache License 2.0", null);
     }
 }

@@ -11,6 +11,8 @@ public class TaskProxy {
 
     private String caseId;
 
+    private String claimNumber;
+
     @XmlElement(name = "TaskId")
     public String getTaskId() {
         return taskId;
@@ -27,5 +29,14 @@ public class TaskProxy {
 
     public void setCaseId(String caseId) {
         this.caseId = caseId;
+    }
+
+    @XmlElement(name = "ClaimNumber")
+    public String getClaimNumber() {
+        return claimNumber;
+    }
+
+    public void setClaimNumber(String claimNumber) {
+        this.claimNumber = claimNumber;
     }
 }

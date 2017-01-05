@@ -58,7 +58,7 @@ public class AudatexController {
     Jaxb2Marshaller marshaller;
 
     @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
-    @RequestMapping(method = RequestMethod.POST, path = "/ping")
+    @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, path = "/ping")
     public PingResponse ping() {
         logger.info("> ping");
 
