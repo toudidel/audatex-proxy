@@ -15,7 +15,7 @@ import java.net.URL;
  * Copyright (C) Coderion sp. z o.o.
  */
 @Configuration
-public class AudatexWSConfiguration {
+public class TaskServiceConfiguration {
 
     @Autowired
     AppConfig appConfig;
@@ -24,8 +24,8 @@ public class AudatexWSConfiguration {
 
     @Bean(name = "taskServicePort")
     TaskServicePort taskServicePort() throws MalformedURLException {
-        TaskService taskService = new TaskService(new URL(appConfig.getWsdl()));
-        logger.info("Audatex webservice client initialized");
+        TaskService taskService = new TaskService(new URL(appConfig.getTaskServiceWsdl()));
+        logger.info("TaskService client initialized");
         return taskService.getTaskServicePort();
     }
 }

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,17 +21,14 @@ import pl.coderion.model.saxif.Comment;
 import pl.coderion.model.saxif.CommentList;
 import pl.coderion.model.saxif.Task;
 import pl.coderion.model.ser.TaskPayload;
+import pl.coderion.util.MarshallingUtil;
 import pl.coderion.util.ParameterUtil;
 import pl.coderion.util.ResponseUtil;
 import pl.coderion.util.SOAPLoggingHandler;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
@@ -43,19 +39,18 @@ import java.util.List;
  */
 @RestController
 @EnableEncryptableProperties
-public class AudatexController {
+public class TaskServiceController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
+    //<editor-fold desc="@Autowired">
     @Autowired
     @Qualifier(value = "taskServicePort")
     TaskServicePort taskServicePort;
 
     @Autowired
     AppConfig appConfig;
-
-    @Autowired
-    Jaxb2Marshaller marshaller;
+    //</editor-fold>
 
     @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, path = "/ping")
@@ -140,24 +135,12 @@ public class AudatexController {
 
         CommentList commentList = new CommentList();
         commentList.getComments().add(new Comment(author, orgId, text, commentType, category));
+
         Task task = new Task(caseId, taskId, commentList);
-        TaskPayload taskPayload = new TaskPayload(task);
+        TaskPayload payload = new TaskPayload(task);
 
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.newDocument();
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(TaskPayload.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(taskPayload, document);
-
-            request.setPayload(document.getDocumentElement());
-
-        } catch (JAXBException | ParserConfigurationException e) {
-            logger.error("An error occured during marshalling payload", e);
-        }
+        Document document = MarshallingUtil.marshall(payload);
+        request.setPayload(document.getDocumentElement());
 
         // debug outbound and inbound messages
         if (Boolean.TRUE.equals(appConfig.getDebugWsMessages())) {

@@ -105,6 +105,15 @@
 												<extraarg>-verbose</extraarg>
 											</extraargs>
 										</wsdlOption>
+										<wsdlOption>
+											<wsdl>src/main/resources/wsdl/AttachmentService_v1.wsdl</wsdl>
+											<wsdlLocation>classpath:wsdl/AttachmentService_v1.wsdl</wsdlLocation>
+											<extraargs>
+												<extraarg>-validate</extraarg>
+												<extraarg>-client</extraarg>
+												<extraarg>-verbose</extraarg>
+											</extraargs>
+										</wsdlOption>
 									</wsdlOptions>
 								</configuration>
 								<goals>

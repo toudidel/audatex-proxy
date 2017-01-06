@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://serviceinterface_v1.b2b.audatex.com" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+ <types>
+
+  <schema elementFormDefault="qualified" targetNamespace="http://serviceinterface_v1.b2b.audatex.com" xmlns="http://www.w3.org/2001/XMLSchema">
+
+   <complexType name="B2BRequest">
+
+    <annotation>
+
+     <documentation>
+The generic request of an AudaNet B2B web service.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element maxOccurs="unbounded" minOccurs="0" name="parameter" type="tns:B2BParameter">
+
+      <annotation>
+
+       <documentation>
+The parameters for the invocation. This includes the callers credentials (loginId,
+                    password), optionally the xslt stylesheet name (if the payload needs to be transformed to SAXIF) and
+                    additional parameters specific to the operation.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="payload" type="anyType">
+
+      <annotation>
+
+       <documentation>
+The data input for the operation to invoke, if required by the operation. The payload
+                    is typically an XML fragment or a string containing XML.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <complexType name="B2BParameter">
+
+    <annotation>
+
+     <documentation>
+A parameter item to pass to an AudaNet B2B web service. Each parameter consists of a name
+                and a value. The name is case sensitive.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="name" type="string">
+
+      <annotation>
+
+       <documentation>
+The name of the parameter. Must be unique in the parameter list.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="value" type="string">
+
+      <annotation>
+
+       <documentation>
+The value of the parameter.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+    <attribute name="xsltParameter" type="boolean" use="optional">
+
+     <annotation>
+
+      <documentation>
+NB! This attribute is deprecated. Please use the context attribute instead.
+                The parameters having this attribute set to "true" will be passed to the XSLT
+                  transformation instead of to the service operation.      </documentation>
+
+     </annotation>
+
+    </attribute>
+
+    <attribute name="context" type="string" use="optional">
+
+     <annotation>
+
+      <documentation>
+The parameters with the context attribute set to a valid context will
+                not be passed to the service operation but to one of the contexts. Currently 
+                supported values:
+                1. 'XSLT' - same as the old xsltParameter=true attribute, parameters marked with the
+                XSLT context will be passed to the XSL transformation engine.
+                2. 'BRE' - parameters with the BRE context will be passed to the BRE rule engine as 
+                variables.      </documentation>
+
+     </annotation>
+
+    </attribute>
+
+   </complexType>
+
+   <complexType name="B2BResponse">
+
+    <annotation>
+
+     <documentation>
+The generic response of an AudaNet B2B web service.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="returnCode" type="int">
+
+      <annotation>
+
+       <documentation>
+Indicates if the invocation was successful or not. Can have the following values:
+                    0: Success. The operation completed successfully.
+                    1: Warning. The operation completed, but some sub-tasks had a problem. The messages contain the
+                    warning information.
+                    2: Error. The operation failed. The messages contain the error information.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="loginId" type="string">
+
+      <annotation>
+
+       <documentation>
+The loginId of the user invoking the service.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="hostName" type="string">
+
+      <annotation>
+
+       <documentation>
+The host which processed the request.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="timestamp" type="dateTime">
+
+      <annotation>
+
+       <documentation>
+The timestamp when the response was generated.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element maxOccurs="unbounded" minOccurs="1" name="message" type="tns:B2BMessage">
+
+      <annotation>
+
+       <documentation>
+Contains information, warning or error messages. The service
+                    always returns at least one
+                    message, but there can be more (e.g. multiple warnings).       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="payload" type="anyType">
+
+      <annotation>
+
+       <documentation>
+The payload, if the invoked operation returns a payload to the client. The payload is
+                    typically an XML fragment or a string containing XML.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <complexType name="B2BMessage">
+
+    <annotation>
+
+     <documentation>
+Contains an information, warning or error message. A message consists of a unique code and
+                a text. A translated text to the users locale may be available as well.     </documentation>
+
+    </annotation>
+
+    <sequence>
+
+     <element name="messageCode" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains the code for the message. This code is a unique alphanumeric
+                    identifier.
+                         </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="severity" type="int">
+
+      <annotation>
+
+       <documentation>
+Indicates the kind of message:
+                    0: information message
+                    1: warning
+                    2: error       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element name="text" type="string">
+
+      <annotation>
+
+       <documentation>
+A textual description in English of what happened.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="localizedText" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains the translated message text, if available, in the users locale.
+                         </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element maxOccurs="unbounded" minOccurs="0" name="additionalInfo" type="string">
+
+      <annotation>
+
+       <documentation>
+Contains formalized additional information, if available. For example, this can be
+                    numeric arguments to an error message. Each specific message code defines if it is provides
+                    additional information and of what type that is.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="caseId" type="string">
+
+      <annotation>
+
+       <documentation>
+The Id of the case that the service operated on. If a new case has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created case.
+                    The client may need this Id to reference this case in subsequent operations.       </documentation>
+
+      </annotation>
+
+     </element>
+
+     <element minOccurs="0" name="taskId" type="string">
+
+      <annotation>
+
+       <documentation>
+The Id of the task that the service operated on. If a new task has been created as a
+                    result of a service operation, this field contains the unique Id of the newly created task.
+                    The client may need this Id to reference this task in subsequent operations.       </documentation>
+
+      </annotation>
+
+     </element>
+
+    </sequence>
+
+   </complexType>
+
+   <element name="pingRequest" type="tns:B2BRequest"/>
+
+   <element name="pingResponse" type="tns:B2BResponse"/>
+
+   <element name="executeActionRequest" type="tns:B2BRequest"/>
+
+   <element name="executeActionResponse" type="tns:B2BResponse"/>
+
+   <element name="getAttachmentsContentRequest" type="tns:B2BRequest"/>
+
+   <element name="getAttachmentsContentResponse" type="tns:B2BResponse"/>
+
+   <element name="addAttachmentsToTaskRequest" type="tns:B2BRequest"/>
+
+   <element name="addAttachmentsToTaskResponse" type="tns:B2BResponse"/>
+
+   <element name="addAttachmentsToTaskCalculationRequest" type="tns:B2BRequest"/>
+
+   <element name="addAttachmentsToTaskCalculationResponse" type="tns:B2BResponse"/>
+
+   <element name="deleteAttachmentsRequest" type="tns:B2BRequest"/>
+
+   <element name="deleteAttachmentsResponse" type="tns:B2BResponse"/>
+
+   <element name="deleteNonGlobalAttachmentsRequest" type="tns:B2BRequest"/>
+
+   <element name="deleteNonGlobalAttachmentsResponse" type="tns:B2BResponse"/>
+
+  </schema>
+
+ </types>
+
+ <message name="pingRequest">
+
+  <part element="tns:pingRequest" name="pingRequest"/>
+
+ </message>
+
+ <message name="pingResponse">
+
+  <part element="tns:pingResponse" name="pingResponse"/>
+
+ </message>
+
+ <message name="executeActionRequest">
+
+  <part element="tns:executeActionRequest" name="executeActionRequest"/>
+
+ </message>
+
+ <message name="executeActionResponse">
+
+  <part element="tns:executeActionResponse" name="executeActionResponse"/>
+
+ </message>
+
+ <message name="getAttachmentsContentRequest">
+
+  <part element="tns:getAttachmentsContentRequest" name="getAttachmentsContentRequest"/>
+
+ </message>
+
+ <message name="getAttachmentsContentResponse">
+
+  <part element="tns:getAttachmentsContentResponse" name="getAttachmentsContentResponse"/>
+
+ </message>
+
+ <message name="addAttachmentsToTaskRequest">
+
+  <part element="tns:addAttachmentsToTaskRequest" name="addAttachmentsToTaskRequest"/>
+
+ </message>
+
+ <message name="addAttachmentsToTaskResponse">
+
+  <part element="tns:addAttachmentsToTaskResponse" name="addAttachmentsToTaskResponse"/>
+
+ </message>
+
+ <message name="addAttachmentsToTaskCalculationRequest">
+
+  <part element="tns:addAttachmentsToTaskCalculationRequest" name="addAttachmentsToTaskCalculationRequest"/>
+
+ </message>
+
+ <message name="addAttachmentsToTaskCalculationResponse">
+
+  <part element="tns:addAttachmentsToTaskCalculationResponse" name="addAttachmentsToTaskCalculationResponse"/>
+
+ </message>
+
+ <message name="deleteAttachmentsRequest">
+
+  <part element="tns:deleteAttachmentsRequest" name="deleteAttachmentsRequest"/>
+
+ </message>
+
+ <message name="deleteAttachmentsResponse">
+
+  <part element="tns:deleteAttachmentsResponse" name="deleteAttachmentsResponse"/>
+
+ </message>
+
+ <message name="deleteNonGlobalAttachmentsRequest">
+
+  <part element="tns:deleteNonGlobalAttachmentsRequest" name="deleteNonGlobalAttachmentsRequest"/>
+
+ </message>
+
+ <message name="deleteNonGlobalAttachmentsResponse">
+
+  <part element="tns:deleteNonGlobalAttachmentsResponse" name="deleteNonGlobalAttachmentsResponse"/>
+
+ </message>
+
+ <portType name="AttachmentServicePort">
+
+  <documentation>
+The AttachmentService allows to upload and download attachment data. The attachments are always associated
+   with a task.
+   </documentation>
+
+  <operation name="ping">
+
+   <documentation>
+Does nothing else than returning a fixed response. This can be used to test the connection to and the
+   SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation.
+     </documentation>
+
+   <input message="tns:pingRequest" name="pingRequest"/>
+
+   <output message="tns:pingResponse" name="pingResponse"/>
+
+  </operation>
+
+  <operation name="executeAction">
+
+   <documentation>
+A generic operation to executes an action. The action is specified as parameter. All operations in this
+   service can also be invoked here, by specifying their operation name as action parameter (e.g.
+   action="getTaskList").
+   This serves two purposes: 1) new actions and customer specific actions can be added to this
+   service without interface change. 2) a generic way to invoke operations.
+    
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+         </documentation>
+
+   <input message="tns:executeActionRequest" name="executeActionRequest"/>
+
+   <output message="tns:executeActionResponse" name="executeActionResponse"/>
+
+  </operation>
+
+  <operation name="getAttachmentsContent">
+
+   <documentation>
+Returns the attachments specified by their Id in the response payload. The attachments are returned as
+    a AttachmentBinaryList structure. Each AttachmentBinary structure in this list has metadata (file name, creator,
+    bytes count) and the actual attachment data as base64 encoded string.  
+    
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "taskId ": The Id of the task containing the attachments. Mandatory parameter.
+      * Parameter "attachmentIds ": Comma separated list of Ids of the attachments to retrieve. The attachment Id is found at the following
+     XPath in a task: /Task/AttachmentBinaryList/AttachmentBinary[i]/ItemId. If this parameter is not specified, all
+     attachments in the tasks global attachment list are returned, provided the response size does not exceed a
+     configurable limit. 
+      
+      * Parameter "processAsOrganization ": Specifies the organization on behalf of which this action is being done. Internally the service will 
+      be performed on behalf of the provisioned contact person of the organization found. The format of this parameter 
+      is: additional identifier (as defined in SAXIF MemberSearchEnumType) followed by a colon and the value to match. 
+      Example: ExternalOrganisationId:AB123
+    
+      * Parameter "processAsUser ": Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:getAttachmentsContentRequest" name="getAttachmentsContentRequest"/>
+
+   <output message="tns:getAttachmentsContentResponse" name="getAttachmentsContentResponse"/>
+
+  </operation>
+
+  <operation name="addAttachmentsToTask">
+
+   <documentation>
+Uploads attachments and adds them to an existing task. The attachments file name and content is specified
+  in a SAXIF structure rooted at type AttachmentBinaryList in the request payload.
+  The response payload contains an AttachmentBinaryList structure with the metadata (no content) of the attachments that
+  were actually added to the task. This list can be empty if no attachments were added to the task.
+  Attachments are compared using attachment file name, if uploaded attachment already exists in the task it will be ignored. For
+  each ignored attachment an info message is added to response, specifying the file name of the attachment that was
+  ignored.
+  Note that some fields in the AttachmentBinary type are initialized by the server and read-only for a client. The only
+  mandatory fields to define a valid attachment are FileName (with extension) and Source with the Attachment child tag
+  that contains the actual Base64 encoded content.
+  
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "taskId ": The Id of the task to add the attachments to. The authenticated user must have write access to this
+     task. Mandatory parameter.
+      * Parameter "processAsOrganization ": Specifies the organization on behalf of which this action is being done. Internally the service will 
+      be performed on behalf of the provisioned contact person of the organization found. The format of this parameter 
+      is: additional identifier (as defined in SAXIF MemberSearchEnumType) followed by a colon and the value to match. 
+      Example: ExternalOrganisationId:AB123
+    
+      * Parameter "processAsUser ": Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:addAttachmentsToTaskRequest" name="addAttachmentsToTaskRequest"/>
+
+   <output message="tns:addAttachmentsToTaskResponse" name="addAttachmentsToTaskResponse"/>
+
+  </operation>
+
+  <operation name="addAttachmentsToTaskCalculation">
+
+   <documentation>
+Uploads attachments and adds them to an existing calculation in the task.
+ The attachments file name and content is specified in a SAXIF structure rooted at type AttachmentBinaryList 
+ in the request payload.The response payload contains an AttachmentBinaryList structure with the metadata (no content) 
+ of the attachments that were actually added to the calculation.This list can be empty if no attachments were added.
+ The attachments are compared using attachment file name, if uploaded attachment already exists in the specified 
+ calculation in the task, it will be ignored. For each ignored attachment an info message is added to response, specifying 
+ the file name of the attachment that was ignored. Note that some fields in the AttachmentBinary type are initialized by 
+ the server and read-only for a client. The only mandatory fields to define a valid attachment are FileName (with extension)
+ and Source with the Attachment child tag that contains the actual Base64 encoded content.
+ 
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "taskId ": The Id of the task. The authenticated user must have write access to this
+     task. Mandatory parameter.
+      * Parameter "calculationId ": The Id of the calculation within the task for which the attachments will be added.
+  	 Mandatory parameter.
+      * Parameter "processAsOrganization ": Specifies the organization on behalf of which this action is being done. Internally the service will 
+      be performed on behalf of the provisioned contact person of the organization found. The format of this parameter 
+      is: additional identifier (as defined in SAXIF MemberSearchEnumType) followed by a colon and the value to match. 
+      Example: ExternalOrganisationId:AB123
+    
+      * Parameter "processAsUser ": Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:addAttachmentsToTaskCalculationRequest" name="addAttachmentsToTaskCalculationRequest"/>
+
+   <output message="tns:addAttachmentsToTaskCalculationResponse" name="addAttachmentsToTaskCalculationResponse"/>
+
+  </operation>
+
+  <operation name="deleteAttachments">
+
+   <documentation>
+Remove the attachments specified by their IDs. The IDs are in request parameter attachmentId.
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "taskId ": The Id of the task containing the attachments. Mandatory parameter.
+      * Parameter "attachmentIds ": Comma separated list of Ids of the attachments to retrieve. The attachment Id is mandatory
+    if you want to delete an attachment
+      * Parameter "processAsOrganization ": Specifies the organization on behalf of which this action is being done. Internally the service will 
+      be performed on behalf of the provisioned contact person of the organization found. The format of this parameter 
+      is: additional identifier (as defined in SAXIF MemberSearchEnumType) followed by a colon and the value to match. 
+      Example: ExternalOrganisationId:AB123
+    
+      * Parameter "processAsUser ": Specifies the loginId of the actual user as which the operation will be performed. Use this parameter
+        if there is a virtual user making the B2B call on behalf of an actual user.   </documentation>
+
+   <input message="tns:deleteAttachmentsRequest" name="deleteAttachmentsRequest"/>
+
+   <output message="tns:deleteAttachmentsResponse" name="deleteAttachmentsResponse"/>
+
+  </operation>
+
+  <operation name="deleteNonGlobalAttachments">
+
+   <documentation>
+Remove the non global attachments specified by their IDs. The IDs are in request parameter attachmentIds. Only accessible to system admin users.
+      * Parameter "loginId": The loginId ("username") of the AudaNet account, for authentication
+      * Parameter "password": The password of the AudaNet account, for authentication
+      
+      * Parameter "taskId ": The Id of the task containing the attachments. Mandatory parameter.
+      * Parameter "country ": The country of the task containing the attachments. Mandatory parameter.
+      * Parameter "attachmentIds ": Comma separated list of Ids of the attachments to retrieve. The attachment Id is mandatory
+    if you want to delete an attachment   </documentation>
+
+   <input message="tns:deleteNonGlobalAttachmentsRequest" name="deleteNonGlobalAttachmentsRequest"/>
+
+   <output message="tns:deleteNonGlobalAttachmentsResponse" name="deleteNonGlobalAttachmentsResponse"/>
+
+  </operation>
+
+ </portType>
+
+ <binding name="AttachmentServiceSoap" type="tns:AttachmentServicePort">
+
+  <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+  <operation name="ping">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="pingRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="pingResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="executeAction">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="executeActionRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="executeActionResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="getAttachmentsContent">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="getAttachmentsContentRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="getAttachmentsContentResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="addAttachmentsToTask">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="addAttachmentsToTaskRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="addAttachmentsToTaskResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="addAttachmentsToTaskCalculation">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="addAttachmentsToTaskCalculationRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="addAttachmentsToTaskCalculationResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="deleteAttachments">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="deleteAttachmentsRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="deleteAttachmentsResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+  <operation name="deleteNonGlobalAttachments">
+
+   <wsdlsoap:operation soapAction=""/>
+
+   <input name="deleteNonGlobalAttachmentsRequest">
+
+    <wsdlsoap:body use="literal"/>
+
+   </input>
+
+   <output name="deleteNonGlobalAttachmentsResponse">
+
+    <wsdlsoap:body use="literal"/>
+
+   </output>
+
+  </operation>
+
+ </binding>
+
+ <service name="AttachmentService">
+
+  <documentation>
+The AttachmentService allows to upload and download attachment data. The attachments are always associated
+   with a task.
+   </documentation>
+
+  <port binding="tns:AttachmentServiceSoap" name="AttachmentServicePort">
+
+   <wsdlsoap:address location="https://www-a.audatex.net/b2b/services/AttachmentService_v1"/>
+
+  </port>
+
+ </service>
+
+</definitions>

@@ -28,34 +28,16 @@ public class ObjectFactory {
     private final static QName _PingResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "pingResponse");
     private final static QName _ExecuteActionRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "executeActionRequest");
     private final static QName _ExecuteActionResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "executeActionResponse");
-    private final static QName _CreateTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "createTaskRequest");
-    private final static QName _CreateTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "createTaskResponse");
-    private final static QName _UpdateTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "updateTaskRequest");
-    private final static QName _UpdateTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "updateTaskResponse");
-    private final static QName _GetTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getTaskRequest");
-    private final static QName _GetTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getTaskResponse");
-    private final static QName _GetTaskListRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getTaskListRequest");
-    private final static QName _GetTaskListResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getTaskListResponse");
-    private final static QName _FindTasksRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "findTasksRequest");
-    private final static QName _FindTasksResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "findTasksResponse");
-    private final static QName _ReassignTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reassignTaskRequest");
-    private final static QName _ReassignTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reassignTaskResponse");
-    private final static QName _ReopenTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reopenTaskRequest");
-    private final static QName _ReopenTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reopenTaskResponse");
-    private final static QName _ReopenCaseRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reopenCaseRequest");
-    private final static QName _ReopenCaseResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "reopenCaseResponse");
-    private final static QName _CloseTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "closeTaskRequest");
-    private final static QName _CloseTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "closeTaskResponse");
-    private final static QName _CloseCaseRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "closeCaseRequest");
-    private final static QName _CloseCaseResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "closeCaseResponse");
-    private final static QName _TransferTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "transferTaskRequest");
-    private final static QName _TransferTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "transferTaskResponse");
-    private final static QName _MergeTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "mergeTaskRequest");
-    private final static QName _MergeTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "mergeTaskResponse");
-    private final static QName _SendTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "sendTaskRequest");
-    private final static QName _SendTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "sendTaskResponse");
-    private final static QName _DeleteTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteTaskRequest");
-    private final static QName _DeleteTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteTaskResponse");
+    private final static QName _GetAttachmentsContentRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getAttachmentsContentRequest");
+    private final static QName _GetAttachmentsContentResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "getAttachmentsContentResponse");
+    private final static QName _AddAttachmentsToTaskRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "addAttachmentsToTaskRequest");
+    private final static QName _AddAttachmentsToTaskResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "addAttachmentsToTaskResponse");
+    private final static QName _AddAttachmentsToTaskCalculationRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "addAttachmentsToTaskCalculationRequest");
+    private final static QName _AddAttachmentsToTaskCalculationResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "addAttachmentsToTaskCalculationResponse");
+    private final static QName _DeleteAttachmentsRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteAttachmentsRequest");
+    private final static QName _DeleteAttachmentsResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteAttachmentsResponse");
+    private final static QName _DeleteNonGlobalAttachmentsRequest_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteNonGlobalAttachmentsRequest");
+    private final static QName _DeleteNonGlobalAttachmentsResponse_QNAME = new QName("http://serviceinterface_v1.b2b.audatex.com", "deleteNonGlobalAttachmentsResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.audatex.b2b.serviceinterface_v1
@@ -136,252 +118,90 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "createTaskRequest")
-    public JAXBElement<B2BRequest> createCreateTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_CreateTaskRequest_QNAME, B2BRequest.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getAttachmentsContentRequest")
+    public JAXBElement<B2BRequest> createGetAttachmentsContentRequest(B2BRequest value) {
+        return new JAXBElement<B2BRequest>(_GetAttachmentsContentRequest_QNAME, B2BRequest.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "createTaskResponse")
-    public JAXBElement<B2BResponse> createCreateTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_CreateTaskResponse_QNAME, B2BResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getAttachmentsContentResponse")
+    public JAXBElement<B2BResponse> createGetAttachmentsContentResponse(B2BResponse value) {
+        return new JAXBElement<B2BResponse>(_GetAttachmentsContentResponse_QNAME, B2BResponse.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "updateTaskRequest")
-    public JAXBElement<B2BRequest> createUpdateTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_UpdateTaskRequest_QNAME, B2BRequest.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "addAttachmentsToTaskRequest")
+    public JAXBElement<B2BRequest> createAddAttachmentsToTaskRequest(B2BRequest value) {
+        return new JAXBElement<B2BRequest>(_AddAttachmentsToTaskRequest_QNAME, B2BRequest.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "updateTaskResponse")
-    public JAXBElement<B2BResponse> createUpdateTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_UpdateTaskResponse_QNAME, B2BResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "addAttachmentsToTaskResponse")
+    public JAXBElement<B2BResponse> createAddAttachmentsToTaskResponse(B2BResponse value) {
+        return new JAXBElement<B2BResponse>(_AddAttachmentsToTaskResponse_QNAME, B2BResponse.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getTaskRequest")
-    public JAXBElement<B2BRequest> createGetTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_GetTaskRequest_QNAME, B2BRequest.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "addAttachmentsToTaskCalculationRequest")
+    public JAXBElement<B2BRequest> createAddAttachmentsToTaskCalculationRequest(B2BRequest value) {
+        return new JAXBElement<B2BRequest>(_AddAttachmentsToTaskCalculationRequest_QNAME, B2BRequest.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getTaskResponse")
-    public JAXBElement<B2BResponse> createGetTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_GetTaskResponse_QNAME, B2BResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "addAttachmentsToTaskCalculationResponse")
+    public JAXBElement<B2BResponse> createAddAttachmentsToTaskCalculationResponse(B2BResponse value) {
+        return new JAXBElement<B2BResponse>(_AddAttachmentsToTaskCalculationResponse_QNAME, B2BResponse.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getTaskListRequest")
-    public JAXBElement<B2BRequest> createGetTaskListRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_GetTaskListRequest_QNAME, B2BRequest.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteAttachmentsRequest")
+    public JAXBElement<B2BRequest> createDeleteAttachmentsRequest(B2BRequest value) {
+        return new JAXBElement<B2BRequest>(_DeleteAttachmentsRequest_QNAME, B2BRequest.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "getTaskListResponse")
-    public JAXBElement<B2BResponse> createGetTaskListResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_GetTaskListResponse_QNAME, B2BResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteAttachmentsResponse")
+    public JAXBElement<B2BResponse> createDeleteAttachmentsResponse(B2BResponse value) {
+        return new JAXBElement<B2BResponse>(_DeleteAttachmentsResponse_QNAME, B2BResponse.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "findTasksRequest")
-    public JAXBElement<B2BRequest> createFindTasksRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_FindTasksRequest_QNAME, B2BRequest.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteNonGlobalAttachmentsRequest")
+    public JAXBElement<B2BRequest> createDeleteNonGlobalAttachmentsRequest(B2BRequest value) {
+        return new JAXBElement<B2BRequest>(_DeleteNonGlobalAttachmentsRequest_QNAME, B2BRequest.class, null, value);
     }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "findTasksResponse")
-    public JAXBElement<B2BResponse> createFindTasksResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_FindTasksResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reassignTaskRequest")
-    public JAXBElement<B2BRequest> createReassignTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_ReassignTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reassignTaskResponse")
-    public JAXBElement<B2BResponse> createReassignTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_ReassignTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reopenTaskRequest")
-    public JAXBElement<B2BRequest> createReopenTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_ReopenTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reopenTaskResponse")
-    public JAXBElement<B2BResponse> createReopenTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_ReopenTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reopenCaseRequest")
-    public JAXBElement<B2BRequest> createReopenCaseRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_ReopenCaseRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "reopenCaseResponse")
-    public JAXBElement<B2BResponse> createReopenCaseResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_ReopenCaseResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "closeTaskRequest")
-    public JAXBElement<B2BRequest> createCloseTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_CloseTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "closeTaskResponse")
-    public JAXBElement<B2BResponse> createCloseTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_CloseTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "closeCaseRequest")
-    public JAXBElement<B2BRequest> createCloseCaseRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_CloseCaseRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "closeCaseResponse")
-    public JAXBElement<B2BResponse> createCloseCaseResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_CloseCaseResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "transferTaskRequest")
-    public JAXBElement<B2BRequest> createTransferTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_TransferTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "transferTaskResponse")
-    public JAXBElement<B2BResponse> createTransferTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_TransferTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "mergeTaskRequest")
-    public JAXBElement<B2BRequest> createMergeTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_MergeTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "mergeTaskResponse")
-    public JAXBElement<B2BResponse> createMergeTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_MergeTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "sendTaskRequest")
-    public JAXBElement<B2BRequest> createSendTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_SendTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "sendTaskResponse")
-    public JAXBElement<B2BResponse> createSendTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_SendTaskResponse_QNAME, B2BResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteTaskRequest")
-    public JAXBElement<B2BRequest> createDeleteTaskRequest(B2BRequest value) {
-        return new JAXBElement<B2BRequest>(_DeleteTaskRequest_QNAME, B2BRequest.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link B2BResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteTaskResponse")
-    public JAXBElement<B2BResponse> createDeleteTaskResponse(B2BResponse value) {
-        return new JAXBElement<B2BResponse>(_DeleteTaskResponse_QNAME, B2BResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://serviceinterface_v1.b2b.audatex.com", name = "deleteNonGlobalAttachmentsResponse")
+    public JAXBElement<B2BResponse> createDeleteNonGlobalAttachmentsResponse(B2BResponse value) {
+        return new JAXBElement<B2BResponse>(_DeleteNonGlobalAttachmentsResponse_QNAME, B2BResponse.class, null, value);
     }
 
 }

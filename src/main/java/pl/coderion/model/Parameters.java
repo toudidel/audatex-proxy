@@ -16,4 +16,8 @@ public interface Parameters {
     String FILTER_CLAIM_NUMBER = "filter:ClaimNumber";
 
     String RETURN_PAYLOAD_AS_XML = "returnPayloadAsXML";
+
+    String PROCESS_AS_USER = "processAsUser";
+
+    String TASK_ID = "taskId";
 }
