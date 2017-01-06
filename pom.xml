@@ -25,7 +25,6 @@
 		<start-class>pl.coderion.AudatexProxyApplication</start-class>
 
 		<cxf.version>3.1.9</cxf.version>
-		<jasypt.version>1.9</jasypt.version>
 		<swagger.version>2.6.1</swagger.version>
 	</properties>
 
@@ -48,11 +47,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.ulisesbocchio</groupId>
-			<artifactId>jasypt-spring-boot-starter</artifactId>
-			<version>${jasypt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>

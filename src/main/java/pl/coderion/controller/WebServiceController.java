@@ -1,10 +1,10 @@
 package pl.coderion.controller;
 
+import com.audatex.b2b.serviceinterface_v1.AttachmentServicePort;
 import com.audatex.b2b.serviceinterface_v1.B2BRequest;
 import com.audatex.b2b.serviceinterface_v1.B2BResponse;
 import com.audatex.b2b.serviceinterface_v1.TaskServicePort;
 import com.sun.org.apache.xerces.internal.dom.ElementImpl;
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,18 +38,21 @@ import java.util.List;
  * Copyright (C) Coderion sp. z o.o.
  */
 @RestController
-@EnableEncryptableProperties
-public class TaskServiceController {
+public class WebServiceController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
     //<editor-fold desc="@Autowired">
     @Autowired
+    AppConfig appConfig;
+
+    @Autowired
     @Qualifier(value = "taskServicePort")
     TaskServicePort taskServicePort;
 
     @Autowired
-    AppConfig appConfig;
+    @Qualifier(value = "attachmentServicePort")
+    AttachmentServicePort attachmentServicePort;
     //</editor-fold>
 
     @ApiOperation(value = "Test connection", notes = "Does nothing else than returning a fixed response. This can be used to test the connection to and the SOAP request handling of the AudaNet server. No user credentials need to be specified for this operation")
@@ -73,19 +76,20 @@ public class TaskServiceController {
 
     @ApiOperation(value = "Find tasks", notes = "Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter criteria specified as parameters")
     @RequestMapping(method = {RequestMethod.POST}, path = "/findTasks")
-    public FindTasksResponse findTasks(@RequestParam(value = "claimNumber") String claimNumber) {
-        logger.info("> findTasks: claimNumber=" + claimNumber);
+    public FindTasksResponse findTasks(@RequestParam(value = "login") String login,
+                                       @RequestParam(value = "password") String password,
+                                       @RequestParam(value = "claimNumber") String claimNumber) {
 
         FindTasksResponse findTasksResponse = new FindTasksResponse();
 
         B2BRequest request = new B2BRequest();
 
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.FIELDS_TO_RETURN, appConfig.getFieldsToReturn()));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.ONLY_MARKED_TASKS, appConfig.getOnlyMarkedTasks()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, login));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, password));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.FIELDS_TO_RETURN, ConstantValues.TASK_FIELDS_TO_RETURN));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.ONLY_MARKED_TASKS, Boolean.FALSE.toString()));
         request.getParameter().add(ParameterUtil.newParameter(Parameters.FILTER_CLAIM_NUMBER, claimNumber));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, appConfig.getReturnPayloadAsXML()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, Boolean.TRUE.toString()));
 
         B2BResponse response = taskServicePort.findTasks(request);
 
@@ -106,10 +110,9 @@ public class TaskServiceController {
         TaskProxy taskProxy = findTasksResponse.getPayload().getTaskProxyList().getTaskProxy();
 
         if (taskProxy != null) {
-            logger.info("TaskId: " + taskProxy.getTaskId());
-            logger.info("CaseId: " + taskProxy.getCaseId());
+            logger.info(String.format("> findTasks for %s: %s", claimNumber, taskProxy.getTaskId()));
         } else {
-            logger.warn("TaskProxy is null");
+            logger.warn(String.format("> findTasks for %s: TaskProxy is null", claimNumber));
         }
 
         return findTasksResponse;
@@ -117,26 +120,26 @@ public class TaskServiceController {
 
     @ApiOperation(value = "Update task", notes = "Updates an existing task with the data in the payload. The task to update is identified by the ItemId ('TaskId') and the CaseId in the payload task")
     @RequestMapping(method = RequestMethod.POST, path = "/updateTask")
-    public UpdateTaskResponse updateTask(@RequestParam(value = "taskId") String taskId,
-                                         @RequestParam(value = "caseId") String caseId,
-                                         @RequestParam(value = "author") String author,
-                                         @RequestParam(value = "orgId") String orgId,
-                                         @RequestParam(value = "text") String text,
-                                         @RequestParam(value = "commentType") String commentType,
-                                         @RequestParam(value = "category") String category) {
+    public UpdateTaskResponse updateTask(@RequestParam(value = "login") String login,
+                                         @RequestParam(value = "password") String password,
+                                         @RequestParam(value = "claimNumber") String claimNumber,
+                                         @RequestParam(value = "text") String text) {
 
-        logger.info("> updateTask: taskId=" + taskId);
+        logger.info("> updateTask for " + claimNumber);
+
+        String taskId = getTaskId(login, password, claimNumber);
 
         UpdateTaskResponse updateTaskResponse = new UpdateTaskResponse();
         B2BRequest request = new B2BRequest();
 
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, appConfig.getLoginId()));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, appConfig.getPassword()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, login));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, password));
 
         CommentList commentList = new CommentList();
-        commentList.getComments().add(new Comment(author, orgId, text, commentType, category));
+        commentList.getComments().add(new Comment(login, appConfig.getResponsibleOrganizationId(), text,
+                ConstantValues.TASK_COMMENT_TYPE_PUBLIC));
 
-        Task task = new Task(caseId, taskId, commentList);
+        Task task = new Task(taskId, commentList);
         TaskPayload payload = new TaskPayload(task);
 
         Document document = MarshallingUtil.marshall(payload);
@@ -154,5 +157,55 @@ public class TaskServiceController {
         ResponseUtil.parseMessages(updateTaskResponse, response);
 
         return updateTaskResponse;
+    }
+
+    @ApiOperation(value = "Add attachment to task", notes = "Uploads attachments and adds them to an existing task")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/addAttachmentsToTaskRequest")
+    public BaseResponse addAttachmentsToTaskRequest(@RequestParam(value = "login") String login,
+                                                    @RequestParam(value = "password") String password,
+                                                    @RequestParam(value = "claimNumber") String claimNumber,
+                                                    @RequestParam(value = "fileName") String fileName,
+                                                    @RequestParam(value = "fileExtension") String fileExtension,
+                                                    @RequestParam(value = "category") String category,
+                                                    @RequestParam(value = "attachment") String attachment) {
+
+        logger.info("> addAttachmentsToTaskRequest for " + claimNumber);
+
+        String taskId = getTaskId(login, password, claimNumber);
+
+        BaseResponse baseResponse = new BaseResponse();
+        B2BRequest request = new B2BRequest();
+
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, login));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, password));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.TASK_ID, taskId));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PROCESS_AS_USER, login));
+
+        AttachmentBinaryListPayload payload = new AttachmentBinaryListPayload(fileName, fileExtension, category, attachment);
+        Document document = MarshallingUtil.marshall(payload);
+        request.setPayload(document.getDocumentElement());
+
+        // debug outbound and inbound messages
+        if (Boolean.TRUE.equals(appConfig.getDebugWsMessages())) {
+            Binding binding = ((BindingProvider) attachmentServicePort).getBinding();
+            List<Handler> handlerChain = binding.getHandlerChain();
+            handlerChain.add(new SOAPLoggingHandler());
+            binding.setHandlerChain(handlerChain);
+        }
+
+        B2BResponse response = attachmentServicePort.addAttachmentsToTask(request);
+        ResponseUtil.parseMessages(baseResponse, response);
+
+        return baseResponse;
+    }
+
+    private String getTaskId(String login, String password, String claimNumber) {
+        FindTasksResponse findTasksResponse = findTasks(login, password, claimNumber);
+
+        if (findTasksResponse != null) {
+            return findTasksResponse.getPayload().getTaskProxyList().getTaskProxy().getTaskId();
+        }
+
+        return null;
     }
 }

@@ -1,12 +1,8 @@
 audatex:
   taskServiceWsdl: https://www-a.audatex.net/b2b/services/TaskService_v1?wsdl
   attachmentServiceWsdl: https://www-a.audatex.net/b2b/services/AttachmentService_v1?wsdl
-  debugWsMessages: true
-  loginId: ENC(OH9/d2gdPURGfAWuHf4sT38gkEFsqRTV)
-  password: ENC(c650q72/tigo+cQC2bARBW5pXE+nY8wk)
-  fieldsToReturn: CaseId,TaskId,ClaimNumber,DisplayName,PlateNumber,Creator,TaskStatus,ManufacturerName,VehicleOwnerName,CreationDate,LastEditedDateTime,TaskProgress,VIN
-  onlyMarkedTasks: false
-  returnPayloadAsXML: true
+  debugWsMessages: false
+  responsibleOrganizationId: MM-O-69289C2F
 
 server:
   port: 8088
@@ -14,8 +10,6 @@ server:
 logging:
   level:
     root: INFO
-    com:
-      ulisesbocchio: ERROR
     org:
       apache: ERROR
       springframework: ERROR

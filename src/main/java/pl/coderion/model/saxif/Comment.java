@@ -15,17 +15,14 @@ public class Comment {
 
     private String commentType;
 
-    private String category;
-
     public Comment() {
     }
 
-    public Comment(String author, String responsibleOrganizationId, String text, String commentType, String category) {
+    public Comment(String author, String responsibleOrganizationId, String text, String commentType) {
         this.author = author;
         this.responsibleOrganizationId = responsibleOrganizationId;
         this.text = text;
         this.commentType = commentType;
-        this.category = category;
     }
 
     @XmlElement(name = "Author")
@@ -62,14 +59,5 @@ public class Comment {
 
     public void setCommentType(String commentType) {
         this.commentType = commentType;
-    }
-
-    @XmlElement(name = "Category")
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }
