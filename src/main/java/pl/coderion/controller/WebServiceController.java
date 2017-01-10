@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import pl.coderion.config.AppConfig;
 import pl.coderion.model.*;
-import pl.coderion.model.saxif.Comment;
-import pl.coderion.model.saxif.CommentList;
-import pl.coderion.model.saxif.Task;
+import pl.coderion.model.saxif.*;
 import pl.coderion.model.ser.TaskPayload;
 import pl.coderion.util.MarshallingUtil;
 import pl.coderion.util.ParameterUtil;
@@ -76,9 +74,24 @@ public class WebServiceController {
 
     @ApiOperation(value = "Find tasks", notes = "Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter criteria specified as parameters")
     @RequestMapping(method = {RequestMethod.POST}, path = "/findTasks")
-    public FindTasksResponse findTasks(@RequestParam(value = "login") String login,
-                                       @RequestParam(value = "password") String password,
-                                       @RequestParam(value = "claimNumber") String claimNumber) {
+    public String findTasks(@RequestParam(value = "login") String login,
+                            @RequestParam(value = "password") String password,
+                            @RequestParam(value = "claimNumber") String claimNumber) {
+
+        FindTasksResponse findTasksResponse = findTasksFull(login, password, claimNumber);
+
+        if (findTasksResponse != null) {
+            return findTasksResponse.getPayload().getTaskProxyList().getTaskProxy().getTaskId();
+        }
+
+        return null;
+    }
+
+    @ApiOperation(value = "Find tasks", notes = "Returns a TaskProxyList with the tasks that the current user is allowed to see and match the filter criteria specified as parameters")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/findTasksFull")
+    public FindTasksResponse findTasksFull(@RequestParam(value = "login") String login,
+                                           @RequestParam(value = "password") String password,
+                                           @RequestParam(value = "claimNumber") String claimNumber) {
 
         FindTasksResponse findTasksResponse = new FindTasksResponse();
 
@@ -120,14 +133,27 @@ public class WebServiceController {
 
     @ApiOperation(value = "Update task", notes = "Updates an existing task with the data in the payload. The task to update is identified by the ItemId ('TaskId') and the CaseId in the payload task")
     @RequestMapping(method = RequestMethod.POST, path = "/updateTask")
-    public UpdateTaskResponse updateTask(@RequestParam(value = "login") String login,
-                                         @RequestParam(value = "password") String password,
-                                         @RequestParam(value = "claimNumber") String claimNumber,
-                                         @RequestParam(value = "text") String text) {
+    public String updateTask(@RequestParam(value = "login") String login,
+                             @RequestParam(value = "password") String password,
+                             @RequestParam(value = "claimNumber") String claimNumber,
+                             @RequestParam(value = "text") String text) {
+
+        UpdateTaskResponse response = updateTaskFull(login, password, claimNumber, text);
+        Integer returnCode = response.getReturnCode();
+        logger.info("ReturnCode: " + returnCode);
+        return returnCode.toString();
+    }
+
+    @ApiOperation(value = "Update task", notes = "Updates an existing task with the data in the payload. The task to update is identified by the ItemId ('TaskId') and the CaseId in the payload task")
+    @RequestMapping(method = RequestMethod.POST, path = "/updateTaskFull")
+    public UpdateTaskResponse updateTaskFull(@RequestParam(value = "login") String login,
+                                             @RequestParam(value = "password") String password,
+                                             @RequestParam(value = "claimNumber") String claimNumber,
+                                             @RequestParam(value = "text") String text) {
 
         logger.info("> updateTask for " + claimNumber);
 
-        String taskId = getTaskId(login, password, claimNumber);
+        String taskId = findTasks(login, password, claimNumber);
 
         UpdateTaskResponse updateTaskResponse = new UpdateTaskResponse();
         B2BRequest request = new B2BRequest();
@@ -161,7 +187,7 @@ public class WebServiceController {
 
     @ApiOperation(value = "Add attachment to task", notes = "Uploads attachments and adds them to an existing task")
     @RequestMapping(method = {RequestMethod.POST}, path = "/addAttachmentsToTaskRequest")
-    public BaseResponse addAttachmentsToTaskRequest(@RequestParam(value = "login") String login,
+    public String addAttachmentsToTaskRequest(@RequestParam(value = "login") String login,
                                                     @RequestParam(value = "password") String password,
                                                     @RequestParam(value = "claimNumber") String claimNumber,
                                                     @RequestParam(value = "fileName") String fileName,
@@ -169,9 +195,26 @@ public class WebServiceController {
                                                     @RequestParam(value = "category") String category,
                                                     @RequestParam(value = "attachment") String attachment) {
 
+        BaseResponse response = addAttachmentsToTaskRequestFull(login, password, claimNumber, fileName, fileExtension,
+                category, attachment);
+        Integer returnCode = response.getReturnCode();
+        logger.info("ReturnCode: " + returnCode);
+        return returnCode.toString();
+    }
+
+    @ApiOperation(value = "Add attachment to task", notes = "Uploads attachments and adds them to an existing task")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/addAttachmentsToTaskRequestFull")
+    public BaseResponse addAttachmentsToTaskRequestFull(@RequestParam(value = "login") String login,
+                                                        @RequestParam(value = "password") String password,
+                                                        @RequestParam(value = "claimNumber") String claimNumber,
+                                                        @RequestParam(value = "fileName") String fileName,
+                                                        @RequestParam(value = "fileExtension") String fileExtension,
+                                                        @RequestParam(value = "category") String category,
+                                                        @RequestParam(value = "attachment") String attachment) {
+
         logger.info("> addAttachmentsToTaskRequest for " + claimNumber);
 
-        String taskId = getTaskId(login, password, claimNumber);
+        String taskId = findTasks(login, password, claimNumber);
 
         BaseResponse baseResponse = new BaseResponse();
         B2BRequest request = new B2BRequest();
@@ -199,13 +242,68 @@ public class WebServiceController {
         return baseResponse;
     }
 
-    private String getTaskId(String login, String password, String claimNumber) {
-        FindTasksResponse findTasksResponse = findTasks(login, password, claimNumber);
+    @ApiOperation(value = "Get task", notes = "Retrieves the task specified by the taskId parameter")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/getTask")
+    public String getTask(@RequestParam(value = "login") String login,
+                          @RequestParam(value = "password") String password,
+                          @RequestParam(value = "claimNumber") String claimNumber) {
 
-        if (findTasksResponse != null) {
-            return findTasksResponse.getPayload().getTaskProxyList().getTaskProxy().getTaskId();
+        GetTaskResponse getTaskResponse = getTaskFull(login, password, claimNumber);
+        Task task = getTaskResponse.getPayload().getTask();
+
+        if (task != null) {
+            StringBuffer sb = new StringBuffer();
+
+            for (ClassCalculation classCalculation : task.getCalculationList().getClassCalculationList()) {
+                for (PartDtl partDtl : classCalculation.getClassResult().getClassXml().getCalcData().getSpareParts().getPartDtls().getPartDtlList()) {
+                    sb.append(String.format("%s %s %s%n", partDtl.getGid(), partDtl.getPartDesc(), partDtl.getPartNo()));
+                }
+            }
+
+            return sb.toString();
+        } else {
+            Integer returnCode = getTaskResponse.getReturnCode();
+            logger.info("ReturnCode: " + returnCode);
+            return returnCode.toString();
+        }
+    }
+
+    @ApiOperation(value = "Get task", notes = "Retrieves the task specified by the taskId parameter")
+    @RequestMapping(method = {RequestMethod.POST}, path = "/getTaskFull")
+    public GetTaskResponse getTaskFull(@RequestParam(value = "login") String login,
+                                    @RequestParam(value = "password") String password,
+                                    @RequestParam(value = "claimNumber") String claimNumber) {
+
+        logger.info("> getTask for " + claimNumber);
+
+        String taskId = findTasks(login, password, claimNumber);
+
+        GetTaskResponse getTaskResponse = new GetTaskResponse();
+        B2BRequest request = new B2BRequest();
+
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LOGIN_ID, login));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.PASSWORD, password));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.TASK_ID, taskId));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, Boolean.TRUE.toString()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.LAST_CHECKED_CALCULATION_ONLY, Boolean.TRUE.toString()));
+
+        B2BResponse response = taskServicePort.getTask(request);
+        ResponseUtil.parseMessages(getTaskResponse, response);
+
+        if (response.getPayload() instanceof ElementImpl) {
+            ElementImpl elementNS = (ElementImpl) response.getPayload();
+            Document document = elementNS.getOwnerDocument();
+
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(GetTaskResponsePayload.class);
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                GetTaskResponsePayload getTaskResponsePayload = (GetTaskResponsePayload) jaxbUnmarshaller.unmarshal(document);
+                getTaskResponse.setPayload(getTaskResponsePayload);
+            } catch (JAXBException e) {
+                logger.error("An error occured during unmarshalling payload", e);
+            }
         }
 
-        return null;
+        return getTaskResponse;
     }
 }

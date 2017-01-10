@@ -17,8 +17,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    public static final String VERSION = "0.9.1";
-
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -32,6 +30,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         Contact contact = new Contact("Coderion", "http://www.coderion.pl", null);
-        return new ApiInfo("audatex-proxy-api", "proxy api for audatex webservice", VERSION, null, contact, "Apache License 2.0", null);
+        return new ApiInfo("audatex-proxy-api", "proxy api for audatex webservice",
+                getClass().getPackage().getImplementationVersion(), null, contact, "Apache License 2.0", null);
     }
 }

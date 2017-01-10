@@ -313,8 +313,8 @@ public interface TaskServicePort {
      *         Allowed values: true, false. Default: false
      *       * Parameter "lastCalculationOnly ": Specifies if only the latest calculation with result in calculation list should be included in the
      *         returned task. This parameter can be used with parameter onlySelectedCalcs. In this case only the latest
-     *         selected calculation is returned. Calculations are sorted by CLASSResult.CalculationDateTime (when
-     *         CLASSResult.CalculationDateTime is null use ClassResult.CaptureDateTime).
+     *         selected calculation is returned. Calculations are sorted by ClassResult.CalculationDateTime (when
+     *         ClassResult.CalculationDateTime is null use ClassResult.CaptureDateTime).
      *         Allowed values: true, false. Default:
      *         false
      *       * Parameter "lastCheckedCalculationOnly ": It returns the last calculation accordingly to the rules defined in parameter lastCalculationOnly but

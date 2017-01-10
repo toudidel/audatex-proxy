@@ -12,6 +12,8 @@ public class Task {
 
     private CommentList commentList;
 
+    private CalculationList calculationList;
+
     public Task() {
     }
 
@@ -29,12 +31,21 @@ public class Task {
         this.taskId = taskId;
     }
 
+    @XmlElement(name = "CommentList")
     public CommentList getCommentList() {
         return commentList;
     }
 
-    @XmlElement(name = "CommentList")
     public void setCommentList(CommentList commentList) {
         this.commentList = commentList;
+    }
+
+    @XmlElement(name = "CalculationList")
+    public CalculationList getCalculationList() {
+        return calculationList;
+    }
+
+    public void setCalculationList(CalculationList calculationList) {
+        this.calculationList = calculationList;
     }
 }

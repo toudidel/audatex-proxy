@@ -13,11 +13,13 @@ public interface Parameters {
 
     String ONLY_MARKED_TASKS = "onlyMarkedTasks";
 
-    String FILTER_CLAIM_NUMBER = "filter:ClaimNumber";
+    String FILTER_CLAIM_NUMBER = "filter:DisplayName";
 
     String RETURN_PAYLOAD_AS_XML = "returnPayloadAsXML";
 
     String PROCESS_AS_USER = "processAsUser";
 
     String TASK_ID = "taskId";
+
+    String LAST_CHECKED_CALCULATION_ONLY = "lastCheckedCalculationOnly";
 }
