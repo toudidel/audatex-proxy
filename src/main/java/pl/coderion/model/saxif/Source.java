@@ -1,4 +1,4 @@
-package pl.coderion.model;
+package pl.coderion.model.saxif;
 
 import javax.xml.bind.annotation.XmlElement;
 

@@ -9,6 +9,8 @@ public class CalcData {
 
     private SpareParts spareParts;
 
+    private FinalCalc finalCalc;
+
     @XmlElement(name = "SpareParts")
     public SpareParts getSpareParts() {
         return spareParts;
@@ -16,5 +18,14 @@ public class CalcData {
 
     public void setSpareParts(SpareParts spareParts) {
         this.spareParts = spareParts;
+    }
+
+    @XmlElement(name = "FinalCalc")
+    public FinalCalc getFinalCalc() {
+        return finalCalc;
+    }
+
+    public void setFinalCalc(FinalCalc finalCalc) {
+        this.finalCalc = finalCalc;
     }
 }

@@ -1,5 +1,7 @@
 package pl.coderion.model;
 
+import pl.coderion.model.saxif.Source;
+
 import javax.xml.bind.annotation.XmlElement;
 
 /**

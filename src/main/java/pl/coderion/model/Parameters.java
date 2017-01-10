@@ -22,4 +22,6 @@ public interface Parameters {
     String TASK_ID = "taskId";
 
     String LAST_CHECKED_CALCULATION_ONLY = "lastCheckedCalculationOnly";
+
+    String NO_ATTACHMENT_CONTENT = "noAttachmentContent";
 }
