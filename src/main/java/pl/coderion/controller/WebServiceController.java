@@ -81,7 +81,7 @@ public class WebServiceController {
 
         FindTasksResponse findTasksResponse = findTasksFull(login, password, claimNumber);
 
-        if (findTasksResponse != null) {
+        if (findTasksResponse != null && findTasksResponse.getPayload() != null) {
             return findTasksResponse.getPayload().getTaskProxyList().getTaskProxy().getTaskId();
         }
 
@@ -121,12 +121,16 @@ public class WebServiceController {
             }
         }
 
-        TaskProxy taskProxy = findTasksResponse.getPayload().getTaskProxyList().getTaskProxy();
+        if (findTasksResponse.getPayload() != null) {
+            TaskProxy taskProxy = findTasksResponse.getPayload().getTaskProxyList().getTaskProxy();
 
-        if (taskProxy != null) {
-            logger.info(String.format("> findTasks for %s: %s", claimNumber, taskProxy.getTaskId()));
+            if (taskProxy != null) {
+                logger.info(String.format("> findTasks for %s: %s", claimNumber, taskProxy.getTaskId()));
+            } else {
+                logger.warn(String.format("> findTasks for %s: TaskProxy is null", claimNumber));
+            }
         } else {
-            logger.warn(String.format("> findTasks for %s: TaskProxy is null", claimNumber));
+            ResponseUtil.parseMessages(findTasksResponse, response);
         }
 
         return findTasksResponse;

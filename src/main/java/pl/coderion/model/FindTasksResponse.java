@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * Copyright (C) Coderion sp. z o.o.
  */
-public class FindTasksResponse {
+public class FindTasksResponse extends BaseResponse {
 
     @Getter @Setter private FindTasksResponsePayload payload;
 }
