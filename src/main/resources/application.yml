@@ -1,7 +1,7 @@
 audatex:
   taskServiceWsdl: https://www-a.audatex.net/b2b/services/TaskService_v1?wsdl
   attachmentServiceWsdl: https://www-a.audatex.net/b2b/services/AttachmentService_v1?wsdl
-  debugWsMessages: false
+  debugWsMessages: true
   responsibleOrganizationId: MM-O-69289C2F
 
 server:

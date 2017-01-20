@@ -254,12 +254,12 @@ public class WebServiceController {
                                @RequestParam(value = "claimNumber") String claimNumber) {
 
         GetTaskResponse getTaskResponse = getTaskFull(login, password, claimNumber, GetTaskRequestTypeEnum.PARTS);
-        Task task = getTaskResponse.getPayload().getTask();
+        GetTaskResponsePayload payload = getTaskResponse.getPayload();
 
-        if (task != null) {
+        if (payload != null) {
             StringBuffer sb = new StringBuffer();
 
-            for (ClassCalculation classCalculation : task.getCalculationList().getClassCalculationList()) {
+            for (ClassCalculation classCalculation : payload.getTask().getCalculationList().getClassCalculationList()) {
                 for (PartDtl partDtl : classCalculation.getClassResult().getClassXml().getCalcData().getSpareParts().getPartDtls().getPartDtlList()) {
                     sb.append(String.format("%s %s %s%n", partDtl.getGid(), partDtl.getPartDesc(), partDtl.getPartNo()));
                 }
@@ -280,12 +280,12 @@ public class WebServiceController {
                                    @RequestParam(value = "claimNumber") String claimNumber) {
 
         GetTaskResponse getTaskResponse = getTaskFull(login, password, claimNumber, GetTaskRequestTypeEnum.VALUATION);
-        Task task = getTaskResponse.getPayload().getTask();
+        GetTaskResponsePayload payload = getTaskResponse.getPayload();
 
-        if (task != null) {
+        if (payload != null && payload.getTask() != null) {
             StringBuffer sb = new StringBuffer();
 
-            for (ClassCalculation classCalculation : task.getCalculationList().getClassCalculationList()) {
+            for (ClassCalculation classCalculation : payload.getTask().getCalculationList().getClassCalculationList()) {
                 GrandTotal grandTotal = classCalculation.getClassResult().getClassXml().getCalcData().getFinalCalc().getGrandTotal();
                 sb.append(String.format("Pnt=%s%n", grandTotal.getPnt()));
                 sb.append(String.format("Lbr=%s%n", grandTotal.getLbr()));
@@ -309,10 +309,10 @@ public class WebServiceController {
                                     @RequestParam(value = "claimNumber") String claimNumber) {
 
         GetTaskResponse getTaskResponse = getTaskFull(login, password, claimNumber, GetTaskRequestTypeEnum.ATTACHMENT);
-        Task task = getTaskResponse.getPayload().getTask();
+        GetTaskResponsePayload payload = getTaskResponse.getPayload();
 
-        if (task != null) {
-            for (ClassCalculation classCalculation : task.getCalculationList().getClassCalculationList()) {
+        if (payload != null) {
+            for (ClassCalculation classCalculation : payload.getTask().getCalculationList().getClassCalculationList()) {
                 for (AttachmentBinary attachmentBinary : classCalculation.getAttachmentBinaryList().getAttachmentBinaryList()) {
                     if (!"pdf".equalsIgnoreCase(attachmentBinary.getFileExtension())) {
                         continue;
