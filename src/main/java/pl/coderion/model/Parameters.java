@@ -23,5 +23,5 @@ public interface Parameters {
 
     String LAST_CHECKED_CALCULATION_ONLY = "lastCheckedCalculationOnly";
 
-    String NO_ATTACHMENT_CONTENT = "noAttachmentContent";
+    String NO_ATTACHMENT_CONTENTS = "noAttachmentContents";
 }

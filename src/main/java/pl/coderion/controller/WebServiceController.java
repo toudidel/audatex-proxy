@@ -82,7 +82,10 @@ public class WebServiceController {
         FindTasksResponse findTasksResponse = findTasksFull(login, password, claimNumber);
 
         if (findTasksResponse != null && findTasksResponse.getPayload() != null) {
-            return findTasksResponse.getPayload().getTaskProxyList().getTaskProxy().getTaskId();
+            TaskProxy taskProxy = findTasksResponse.getPayload().getTaskProxyList().getTaskProxy();
+            if (taskProxy != null) {
+                return taskProxy.getTaskId();
+            }
         }
 
         return null;
@@ -286,12 +289,15 @@ public class WebServiceController {
             StringBuffer sb = new StringBuffer();
 
             for (ClassCalculation classCalculation : payload.getTask().getCalculationList().getClassCalculationList()) {
-                GrandTotal grandTotal = classCalculation.getClassResult().getClassXml().getCalcData().getFinalCalc().getGrandTotal();
+                ClassResult classResult = classCalculation.getClassResult();
+                GrandTotal grandTotal = classResult.getClassXml().getCalcData().getFinalCalc().getGrandTotal();
                 sb.append(String.format("Pnt=%s%n", grandTotal.getPnt()));
                 sb.append(String.format("Lbr=%s%n", grandTotal.getLbr()));
                 sb.append(String.format("Parts=%s%n", grandTotal.getParts()));
                 sb.append(String.format("NFODedu=%s%n", grandTotal.getNfodedu()));
                 sb.append(String.format("Rep=%s%n", grandTotal.getRep()));
+                sb.append(String.format("CalculationDateTime=%s%n", classResult.getCalculationDateTime()));
+                sb.append(String.format("UserId=%s%n", classResult.getUserId()));
             }
 
             return sb.toString();
@@ -350,7 +356,7 @@ public class WebServiceController {
         request.getParameter().add(ParameterUtil.newParameter(Parameters.TASK_ID, taskId));
         request.getParameter().add(ParameterUtil.newParameter(Parameters.RETURN_PAYLOAD_AS_XML, Boolean.TRUE.toString()));
         request.getParameter().add(ParameterUtil.newParameter(Parameters.LAST_CHECKED_CALCULATION_ONLY, Boolean.TRUE.toString()));
-        request.getParameter().add(ParameterUtil.newParameter(Parameters.NO_ATTACHMENT_CONTENT, noAttachmentContent.toString()));
+        request.getParameter().add(ParameterUtil.newParameter(Parameters.NO_ATTACHMENT_CONTENTS, noAttachmentContent.toString()));
 
         B2BResponse response = taskServicePort.getTask(request);
         ResponseUtil.parseMessages(getTaskResponse, response);
@@ -366,6 +372,12 @@ public class WebServiceController {
                 getTaskResponse.setPayload(getTaskResponsePayload);
             } catch (JAXBException e) {
                 logger.error("An error occured during unmarshalling payload", e);
+            }
+        }
+
+        if (!getTaskResponse.getReturnCode().equals(0)) {
+            for (BaseResponseMessage baseResponseMessage : getTaskResponse.getMessages()) {
+                logger.warn(String.format("%s (%s)", baseResponseMessage.getMessageCode(), baseResponseMessage.getText()));
             }
         }
 
