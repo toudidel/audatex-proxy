@@ -25,7 +25,7 @@ public class TaskServiceConfiguration {
     @Bean(name = "taskServicePort")
     TaskServicePort taskServicePort() throws MalformedURLException {
         TaskService taskService = new TaskService(new URL(appConfig.getTaskServiceWsdl()));
-        logger.info("TaskService client initialized");
+        logger.info(String.format("TaskService client initialized [%s]", appConfig.getTaskServiceWsdl()));
         return taskService.getTaskServicePort();
     }
 }

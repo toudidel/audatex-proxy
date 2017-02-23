@@ -25,7 +25,7 @@ public class AttachmentServiceConfiguration {
     @Bean(name = "attachmentServicePort")
     AttachmentServicePort attachmentServicePort() throws MalformedURLException {
         AttachmentService attachmentService = new AttachmentService(new URL(appConfig.getAttachmentServiceWsdl()));
-        logger.info("AttachmentService client initialized");
+        logger.info(String.format("AttachmentService client initialized [%s]", appConfig.getAttachmentServiceWsdl()));
         return attachmentService.getAttachmentServicePort();
     }
 }
