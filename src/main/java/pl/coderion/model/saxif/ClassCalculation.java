@@ -7,9 +7,20 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ClassCalculation {
 
+    private ClassInput classInput;
+
     private ClassResult classResult;
 
     private AttachmentBinaryList attachmentBinaryList;
+
+    @XmlElement(name = "CLASSInput")
+    public ClassInput getClassInput() {
+        return classInput;
+    }
+
+    public void setClassInput(ClassInput classInput) {
+        this.classInput = classInput;
+    }
 
     @XmlElement(name = "CLASSResult")
     public ClassResult getClassResult() {

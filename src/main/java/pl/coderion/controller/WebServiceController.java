@@ -296,6 +296,7 @@ public class WebServiceController {
                 sb.append(String.format("Parts=%s%n", grandTotal.getParts()));
                 sb.append(String.format("NFODedu=%s%n", grandTotal.getNfodedu()));
                 sb.append(String.format("Rep=%s%n", grandTotal.getRep()));
+                sb.append(String.format("Rate1=%s%n", classCalculation.getClassInput().getRate1()));
                 sb.append(String.format("CalculationDateTime=%s%n", classResult.getCalculationDateTime()));
                 sb.append(String.format("UserId=%s%n", classResult.getUserId()));
             }
