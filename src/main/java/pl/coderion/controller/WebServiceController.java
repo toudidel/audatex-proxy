@@ -4,6 +4,7 @@ import com.audatex.b2b.serviceinterface_v1.AttachmentServicePort;
 import com.audatex.b2b.serviceinterface_v1.B2BRequest;
 import com.audatex.b2b.serviceinterface_v1.B2BResponse;
 import com.audatex.b2b.serviceinterface_v1.TaskServicePort;
+import com.google.common.base.Splitter;
 import com.sun.org.apache.xerces.internal.dom.ElementImpl;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -220,7 +221,10 @@ public class WebServiceController {
                                                         @RequestParam(value = "category") String category,
                                                         @RequestParam(value = "attachment") String attachment) {
 
+        attachment = String.join("\n", Splitter.fixedLength(72).split(attachment.replace(" ", "+")));
+
         logger.info("> addAttachmentsToTaskRequest for " + claimNumber);
+        logger.info("attachment: " + attachment);
 
         String taskId = findTasks(login, password, claimNumber);
 
